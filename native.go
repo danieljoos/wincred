@@ -120,23 +120,6 @@ func nativeCredList() error {
 	fmt.Println("Keychain items:")
 	fmt.Println("This is a uintptr- an integer type that is large enough to hold the bit pattern of any pointer:")
 	fmt.Println(credList)
-	fmt.Println(credList[0])
-	fmt.Println((*nativeCREDENTIAL)(unsafe.Pointer(credList[0])))
-	fmt.Println(((*nativeCREDENTIAL)(unsafe.Pointer(credList[0]))).Attributes)
-	result := new(Credential)
-	fmt.Println(result)
-	cred := (*nativeCREDENTIAL)(unsafe.Pointer(credList[0]))
-	attrSliceHeader := reflect.SliceHeader{
-		Data: cred.Attributes,
-		Len:  int(cred.AttributeCount),
-		Cap:  int(cred.AttributeCount),
-	}
-	attrSlice := *(*[]nativeCREDENTIAL_ATTRIBUTE)(unsafe.Pointer(&attrSliceHeader))
-	for i, attr := range attrSlice {
-		resultAttr := &result.Attributes[i]
-		resultAttr.Keyword = utf16PtrToString(attr.Keyword)
-		resultAttr.Value = C.GoBytes(unsafe.Pointer(attr.Value), C.int(attr.ValueSize))
-	}
-	fmt.Println(result)
+	fmt.Println(&credList)
 	return nil
 }

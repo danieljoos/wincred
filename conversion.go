@@ -62,7 +62,6 @@ func nativeToCredential(cred *nativeCREDENTIAL) (result *Credential) {
 		resultAttr.Value = C.GoBytes(unsafe.Pointer(attr.Value), C.int(attr.ValueSize))
 	}
 	fmt.Println(result)
-
 	return result
 }
 
