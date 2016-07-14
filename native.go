@@ -105,12 +105,13 @@ func nativeCredList() error {
 	fmt.Println("in listing function___")
 	var count uintptr
 	var cred uintptr
-	err := procCredList.Call(
-		nil,
-		0,
+	ret, _, err := procCredList.Call(
+		uintptr(nil),
+		uintptr(0),
 		uintptr(unsafe.Pointer(&count)),
 		uintptr(unsafe.Pointer(&cred)),
 	)
+	fmt.Println(ret)
 	fmt.Println(err)
 	return nil
 }
