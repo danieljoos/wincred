@@ -113,7 +113,9 @@ func nativeCredList() error {
 	)
 	fmt.Println(ret)
 	fmt.Println(err)
+	fmt.Println("Number of items in the keychain:")
 	fmt.Println(int(count))
-	fmt.Println(cred)
+	fmt.Println("Keychain items:")
+	fmt.Println(*cred)
 	return nil
 }
