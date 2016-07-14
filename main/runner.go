@@ -11,7 +11,7 @@ func main() {
 	g.UserName = "test"
 	g.CredentialBlob = []byte("abcdefghijlmnop")
 	g.Persist = winc.PersistLocalMachine
-	return g.Write()
+	g.Write()
 }
 
 
