@@ -105,12 +105,12 @@ func nativeCredDelete(cred *Credential, typ nativeCRED_TYPE) error {
 func nativeCredList() error {
 	fmt.Println("in listing function-----------")
 	var count uint
-	var credList uintptr
+	var lstPtr uintptr
 	ret, _, err := procCredList.Call(
 		uintptr(0),
 		uintptr(0),
 		uintptr(unsafe.Pointer(&count)),
-		uintptr(unsafe.Pointer(&credList)),
+		uintptr(unsafe.Pointer(&lstPtr)),
 	)
 	fmt.Println(ret)
 	fmt.Println(err)
@@ -118,13 +118,13 @@ func nativeCredList() error {
 	fmt.Println(count)
 	fmt.Println("Keychain items:")
 	fmt.Println("This is a uintptr- an integer type that is large enough to hold the bit pattern of any pointer:")
-	fmt.Println(credList)
-	type credsList [4](*nativeCREDENTIAL)
-	myList := (credsList)(unsafe.Pointer(&credList))
+	fmt.Println(lstPtr)
+	type credsList [](*nativeCREDENTIAL)
+	myList := (*credsList)(unsafe.Pointer(&lstPtr))
 	fmt.Println(myList)
 	fmt.Println(*myList)
-	fmt.Println((*myList)[2])
-	fmt.Println(((*myList)[2]).UserName)
-	fmt.Println(utf16PtrToString(((*myList)[2]).UserName))
+	fmt.Println((*myList)[0])
+	fmt.Println(((*myList)[0]).UserName)
+	fmt.Println(utf16PtrToString(((*myList)[0]).UserName))
 	return nil
 }
