@@ -103,14 +103,14 @@ func nativeCredDelete(cred *Credential, typ nativeCRED_TYPE) error {
 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374794(v=vs.85).aspx
 func nativeCredList() error {
 	fmt.Println("in listing function___")
-	var count uintptr
+	var count int
 	var creds uintptr
 	fmt.Println(unsafe.Pointer(&creds))
 	ret, _, err := procCredList.Call(
 		uintptr(0),
 		uintptr(0),
-		count,
-		creds,
+		uintptr(unsafe.Pointer(&count)),
+		uintptr(unsafe.Pointer(&creds)),
 	)
 	fmt.Println(ret)
 	fmt.Println(err)
