@@ -120,7 +120,6 @@ func nativeCredList() error {
 	fmt.Println(credList)
 	fmt.Println(credList[0])
 	fmt.Println((*nativeCREDENTIAL)(unsafe.Pointer(credList[0])))
-	fmt.Println(((*nativeCREDENTIAL)(unsafe.Pointer(credList[0]))).UserName)
-	fmt.Println(nativeToCredential(((*nativeCREDENTIAL)(unsafe.Pointer(credList[0])))))
+	fmt.Println(((*nativeCREDENTIAL)(unsafe.Pointer(credList[0]))).Attributes)
 	return nil
 }
