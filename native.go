@@ -104,13 +104,13 @@ func nativeCredDelete(cred *Credential, typ nativeCRED_TYPE) error {
 func nativeCredList() error {
 	fmt.Println("in listing function___")
 	var count uintptr
-	var creds []Credential
+	var creds uintptr
 	fmt.Println(unsafe.Pointer(&creds))
 	ret, _, err := procCredList.Call(
 		uintptr(0),
 		uintptr(0),
-		uintptr(unsafe.Pointer(&count)),
-		uintptr(unsafe.Pointer(&creds)),
+		count,
+		creds,
 	)
 	fmt.Println(ret)
 	fmt.Println(err)
