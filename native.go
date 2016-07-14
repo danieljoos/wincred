@@ -109,7 +109,7 @@ func nativeCredList() error {
 		uintptr(0),
 		uintptr(0),
 		uintptr(unsafe.Pointer(&count)),
-		uintptr(unsafe.Pointer(&credList)),
+		uintptr(credList),
 	)
 	fmt.Println(ret)
 	fmt.Println(err)
