@@ -122,6 +122,6 @@ func nativeCredList() error {
 	fmt.Println("trying to make it a pointer")
 	//fmt.Println((unsafe.Pointer(&(credList[0]))))
 	fmt.Println((* nativeCREDENTIAL)(unsafe.Pointer(&credList)))
-	fmt.Println((* nativeCREDENTIAL)(nil))
+	fmt.Println((* nativeCREDENTIAL)(unsafe.Pointer(nil)))
 	return nil
 }
