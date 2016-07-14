@@ -122,8 +122,8 @@ func nativeCredList() error {
 	type credsList [4](*nativeCREDENTIAL)
 	myList := (*credsList)(unsafe.Pointer(&credList))
 	fmt.Println(myList)
-	fmt.Println((*myList)[0])
-	fmt.Println(((*myList)[0]).UserName)
+	fmt.Println((*myList)[2])
+	fmt.Println(((*myList)[2]).UserName)
 	fmt.Println(utf16PtrToString(((*myList)[2]).UserName))
 	return nil
 }
