@@ -104,12 +104,12 @@ func nativeCredDelete(cred *Credential, typ nativeCRED_TYPE) error {
 func nativeCredList() error {
 	fmt.Println("in listing function-----------")
 	var count uint
-	var credList [3](*nativeCREDENTIAL)
+	var credList []*nativeCREDENTIAL
 	ret, _, err := procCredList.Call(
 		uintptr(0),
 		uintptr(0),
 		uintptr(unsafe.Pointer(&count)),
-		uintptr(unsafe.Pointer(&credList)),
+		uintptr(unsafe.Pointer(&credList[0])),
 	)
 	fmt.Println(ret)
 	fmt.Println(err)
@@ -121,5 +121,7 @@ func nativeCredList() error {
 	fmt.Println("this should be list of pointers to credentials")
 	fmt.Println(unsafe.Pointer(&credList))
 	fmt.Println(credList)
+	fmt.Println(utf16PtrToString(((*nativeCREDENTIAL)(unsafe.Pointer(&credList[0]))).UserName))
+	// Trying in cgo
 	return nil
 }
