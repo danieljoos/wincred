@@ -5,6 +5,7 @@ import (
 	"unsafe"
 	"fmt"
 	"reflect"
+	"C"
 )
 
 var (
@@ -122,6 +123,8 @@ func nativeCredList() error {
 	fmt.Println(credList[0])
 	fmt.Println((*nativeCREDENTIAL)(unsafe.Pointer(credList[0])))
 	fmt.Println(((*nativeCREDENTIAL)(unsafe.Pointer(credList[0]))).Attributes)
+	result := new(Credential)
+	fmt.Println(result)
 	cred := (*nativeCREDENTIAL)(unsafe.Pointer(credList[0]))
 	attrSliceHeader := reflect.SliceHeader{
 		Data: cred.Attributes,
@@ -129,6 +132,11 @@ func nativeCredList() error {
 		Cap:  int(cred.AttributeCount),
 	}
 	attrSlice := *(*[]nativeCREDENTIAL_ATTRIBUTE)(unsafe.Pointer(&attrSliceHeader))
-	fmt.Println(attrSlice)
+	for i, attr := range attrSlice {
+		resultAttr := &result.Attributes[i]
+		resultAttr.Keyword = utf16PtrToString(attr.Keyword)
+		resultAttr.Value = C.GoBytes(unsafe.Pointer(attr.Value), C.int(attr.ValueSize))
+	}
+	fmt.Println(result)
 	return nil
 }
