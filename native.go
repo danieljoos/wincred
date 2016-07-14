@@ -120,7 +120,7 @@ func nativeCredList() error {
 	fmt.Println(credList)
 	fmt.Println(uintptr(unsafe.Pointer(&credList)))
 	fmt.Println(unsafe.Pointer(&credList))
-	fmt.Println(*(unsafe.Pointer(credList)))
+	fmt.Println(&credList)
 	// Trying in cgo
 	return nil
 }
