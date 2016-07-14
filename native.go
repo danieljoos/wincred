@@ -117,6 +117,5 @@ func nativeCredList() error {
 	fmt.Println(int(count))
 	fmt.Println("Keychain items:")
 	fmt.Println(cred)
-	fmt.Println(cred.ToPointer())
 	return nil
 }
