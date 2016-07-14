@@ -104,27 +104,23 @@ func nativeCredDelete(cred *Credential, typ nativeCRED_TYPE) error {
 func nativeCredList() error {
 	fmt.Println("in listing function___")
 	var count int
-	var creds uintptr
+	var credList []Credential
+	creds := uintptr(unsafe.Pointer(&credList))
 	fmt.Println(unsafe.Pointer(&creds))
 	ret, _, err := procCredList.Call(
 		uintptr(0),
 		uintptr(0),
 		uintptr(unsafe.Pointer(&count)),
-		uintptr(unsafe.Pointer(&creds)),
+		creds,
 	)
 	fmt.Println(ret)
 	fmt.Println(err)
 	fmt.Println("Number of items in the keychain:")
 	fmt.Println(count)
 	fmt.Println("Keychain items:")
-	fmt.Println("This is a uintptr- uintptr is an integer type that is large enough to hold the bit pattern of any pointer:")
+	fmt.Println("This is a uintptr- an integer type that is large enough to hold the bit pattern of any pointer:")
 	fmt.Println(creds)
 	fmt.Println("trying to make it a pointer")
-	fmt.Println(([](*nativeCREDENTIAL)(unsafe.Pointer(creds))))
-	fmt.Println("native to credential")
-	fmt.Println(((*nativeCREDENTIAL)(unsafe.Pointer(creds))).Comment)
-	fmt.Println(((*nativeCREDENTIAL)(unsafe.Pointer(&count))).Comment)
-	fmt.Println("comment ptr to string")
-	fmt.Println(utf16PtrToString(((*nativeCREDENTIAL)(unsafe.Pointer(&count))).UserName))
+
 	return nil
 }
