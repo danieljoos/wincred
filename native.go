@@ -113,7 +113,7 @@ func nativeCredList() error {
 	)
 	fmt.Println(ret)
 	fmt.Println(err)
-	fmt.Println(count)
+	fmt.Println(int(count))
 	fmt.Println(cred)
 	return nil
 }
