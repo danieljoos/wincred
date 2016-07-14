@@ -14,6 +14,9 @@ func main() {
 	}
 	fmt.Println(g.UserName)
 	fmt.Println(string(g.CredentialBlob))
+	fmt.Println("list stuff ------------")
+	err = winc.List()
+	fmt.Println(err)
 }
 
 

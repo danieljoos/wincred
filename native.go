@@ -3,6 +3,7 @@ package wincred
 import (
 	"syscall"
 	"unsafe"
+	"fmt"
 )
 
 var (
@@ -95,5 +96,10 @@ func nativeCredDelete(cred *Credential, typ nativeCRED_TYPE) error {
 		return err
 	}
 
+	return nil
+}
+
+func nativeCredList() error {
+	fmt.Println("in listing function___")
 	return nil
 }
