@@ -1,6 +1,22 @@
 #include <windows.h>
 #include <stdio.h>
 #include <io.h>
+#include <fcntl.h>
+
+typedef struct _CREDENTIALW {
+	DWORD                  Flags;
+	DWORD                  Type;
+	LPWSTR                 TargetName;
+	LPWSTR                 Comment;
+	FILETIME               LastWritten;
+	DWORD                  CredentialBlobSize;
+	LPBYTE                 CredentialBlob;
+	DWORD                  Persist;
+	DWORD                  AttributeCount;
+	PCREDENTIAL_ATTRIBUTEW Attributes;
+	LPWSTR                 TargetAlias;
+	LPWSTR                 UserName;
+} CREDENTIALW, *PCREDENTIALW;
 
 static void get_credential(void)
 {
