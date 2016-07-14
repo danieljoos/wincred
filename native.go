@@ -13,7 +13,7 @@ var (
 	procCredWrite  = modadvapi32.NewProc("CredWriteW")
 	procCredDelete = modadvapi32.NewProc("CredDeleteW")
 	procCredFree   = modadvapi32.NewProc("CredFree")
-	procCredList   = modadvapi32.NewProc("CredEnumerate")
+	procCredList   = modadvapi32.NewProc("CredEnumerateW")
 )
 
 // http://msdn.microsoft.com/en-us/library/windows/desktop/aa374788(v=vs.85).aspx
