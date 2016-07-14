@@ -105,12 +105,11 @@ func nativeCredList() error {
 	fmt.Println("in listing function___")
 	var count int
 	var credList []Credential
-	creds := uintptr(unsafe.Pointer(&credList))
 	ret, _, err := procCredList.Call(
 		uintptr(0),
 		uintptr(0),
 		uintptr(unsafe.Pointer(&count)),
-		creds,
+		uintptr(unsafe.Pointer(&credList)),
 	)
 	fmt.Println(ret)
 	fmt.Println(err)
@@ -118,10 +117,7 @@ func nativeCredList() error {
 	fmt.Println(count)
 	fmt.Println("Keychain items:")
 	fmt.Println("This is a uintptr- an integer type that is large enough to hold the bit pattern of any pointer:")
-	fmt.Println(creds)
+	fmt.Println(credList)
 	fmt.Println("trying to make it a pointer")
-	//fmt.Println((unsafe.Pointer(&(credList[0]))))
-	fmt.Println((* nativeCREDENTIAL)(unsafe.Pointer(&credList)))
-	fmt.Println((* nativeCREDENTIAL)(unsafe.Pointer(nil)))
 	return nil
 }
