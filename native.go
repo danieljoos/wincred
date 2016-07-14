@@ -108,8 +108,8 @@ func nativeCredList() error {
 	ret, _, err := procCredList.Call(
 		uintptr(0),
 		uintptr(0),
-		uintptr(&count),
-		uintptr(&creds),
+		&count,
+		&creds,
 	)
 	fmt.Println(ret)
 	fmt.Println(err)
