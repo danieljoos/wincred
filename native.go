@@ -4,6 +4,7 @@ import (
 	"syscall"
 	"unsafe"
 	"fmt"
+	"reflect"
 )
 
 var (
@@ -121,5 +122,13 @@ func nativeCredList() error {
 	fmt.Println(credList[0])
 	fmt.Println((*nativeCREDENTIAL)(unsafe.Pointer(credList[0])))
 	fmt.Println(((*nativeCREDENTIAL)(unsafe.Pointer(credList[0]))).Attributes)
+	cred := (*nativeCREDENTIAL)(unsafe.Pointer(credList[0]))
+	attrSliceHeader := reflect.SliceHeader{
+		Data: cred.Attributes,
+		Len:  int(cred.AttributeCount),
+		Cap:  int(cred.AttributeCount),
+	}
+	attrSlice := *(*[]nativeCREDENTIAL_ATTRIBUTE)(unsafe.Pointer(&attrSliceHeader))
+	fmt.Println(attrSlice)
 	return nil
 }
