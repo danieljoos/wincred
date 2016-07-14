@@ -105,6 +105,7 @@ func nativeCredList() error {
 	fmt.Println("in listing function___")
 	var count uintptr
 	var creds []Credential
+	fmt.Println(unsafe.Pointer(&creds))
 	ret, _, err := procCredList.Call(
 		uintptr(0),
 		uintptr(0),
