@@ -114,7 +114,7 @@ func nativeCredList() error {
 	fmt.Println(ret)
 	fmt.Println(err)
 	fmt.Println("Number of items in the keychain:")
-	fmt.Println(*count)
+	fmt.Println(count)
 	fmt.Println("Keychain items:")
 	fmt.Println("This is a uintptr- uintptr is an integer type that is large enough to hold the bit pattern of any pointer:")
 	fmt.Println(cred)
