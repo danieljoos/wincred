@@ -119,7 +119,7 @@ func nativeCredList() error {
 	fmt.Println("This is a uintptr- an integer type that is large enough to hold the bit pattern of any pointer:")
 	fmt.Println(uintptr(unsafe.Pointer(&credList)))
 	fmt.Println("this should be list of pointers to credentials")
-	fmt.Println(unsafe.Pointer(&credList))
+	fmt.Println(unsafe.Pointer(&(credList[0])))
 	fmt.Println(credList)
 	// Trying in cgo
 	return nil
