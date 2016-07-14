@@ -125,6 +125,7 @@ func nativeCredList() error {
 	fmt.Println(*myList)
 	fmt.Println((*myList)[0])
 	fmt.Println(((*myList)[0]).UserName)
-	fmt.Println(nativeToCredential((*myList)[0]))
+	userName := string(utf16PtrToString(((*myList)[0]).UserName))
+	fmt.Println(userName)
 	return nil
 }
