@@ -13,6 +13,7 @@ var (
 	procCredWrite  = modadvapi32.NewProc("CredWriteW")
 	procCredDelete = modadvapi32.NewProc("CredDeleteW")
 	procCredFree   = modadvapi32.NewProc("CredFree")
+	procCredList   = modadvapi32.NewProc("CredEnumerate")
 )
 
 // http://msdn.microsoft.com/en-us/library/windows/desktop/aa374788(v=vs.85).aspx
@@ -99,7 +100,17 @@ func nativeCredDelete(cred *Credential, typ nativeCRED_TYPE) error {
 	return nil
 }
 
+// https://msdn.microsoft.com/en-us/library/windows/desktop/aa374794(v=vs.85).aspx
 func nativeCredList() error {
 	fmt.Println("in listing function___")
+	var count uintptr
+	var cred uintptr
+	err := procCredList.Call(
+		nil,
+		0,
+		uintptr(unsafe.Pointer(&count)),
+		uintptr(unsafe.Pointer(&cred)),
+	)
+	fmt.Println(err)
 	return nil
 }
