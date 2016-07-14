@@ -54,6 +54,7 @@ func nativeToCredential(cred *nativeCREDENTIAL) (result *Credential) {
 		Cap:  int(cred.AttributeCount),
 	}
 	attrSlice := *(*[]nativeCREDENTIAL_ATTRIBUTE)(unsafe.Pointer(&attrSliceHeader))
+	fmt.Println("attrSlice :")
 	fmt.Println(attrSlice)
 	for i, attr := range attrSlice {
 		resultAttr := &result.Attributes[i]
