@@ -108,8 +108,8 @@ func nativeCredList() error {
 	ret, _, err := procCredList.Call(
 		uintptr(0),
 		uintptr(0),
-		uintptr(unsafe.Pointer(&count)),
-		uintptr(unsafe.Pointer(&creds)),
+		uintptr(&count),
+		uintptr(&creds),
 	)
 	fmt.Println(ret)
 	fmt.Println(err)
@@ -119,6 +119,7 @@ func nativeCredList() error {
 	fmt.Println("This is a uintptr- uintptr is an integer type that is large enough to hold the bit pattern of any pointer:")
 	fmt.Println(creds)
 	fmt.Println("trying to make it a pointer")
-	fmt.Println(&creds)
+	pcreds := &creds
+	fmt.Println(pcreds)
 	return nil
 }
