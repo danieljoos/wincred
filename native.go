@@ -120,5 +120,6 @@ func nativeCredList() error {
 	fmt.Println(uintptr(unsafe.Pointer(&credList)))
 	fmt.Println("this should be list of pointers to credentials")
 	fmt.Println(credList)
+	// Trying in cgo
 	return nil
 }
