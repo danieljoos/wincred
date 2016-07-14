@@ -121,6 +121,6 @@ func nativeCredList() error {
 	fmt.Println(creds)
 	fmt.Println("trying to make it a pointer")
 	pcreds := &creds
-	fmt.Println(pcreds)
+	fmt.Println(pcreds[0])
 	return nil
 }
