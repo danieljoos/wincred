@@ -7,11 +7,13 @@ import (
 
 func main() {
 	fmt.Println("hello")
-	g := winc.NewGenericCredential("credzzzz")
-	g.UserName = "test"
-	g.CredentialBlob = []byte("abcdefghijlmnop")
-	g.Persist = winc.PersistLocalMachine
-	g.Write()
+	g, err := winc.GetGenericCredential("credzzzz")
+	fmt.Println(err)
+	if g == nil {
+		fmt.Println("error")
+	}
+	fmt.Println(g.UserName)
+	fmt.Println(string(g.CredentialBlob))
 }
 
 
