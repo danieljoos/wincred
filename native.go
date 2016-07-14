@@ -105,7 +105,6 @@ func nativeCredList() error {
 	fmt.Println("in listing function-----------")
 	var count uint
 	var credList uintptr
-	fmt.Println(credList)
 	ret, _, err := procCredList.Call(
 		uintptr(0),
 		uintptr(0),
@@ -121,7 +120,7 @@ func nativeCredList() error {
 	fmt.Println(credList)
 	fmt.Println(uintptr(unsafe.Pointer(&credList)))
 	fmt.Println(unsafe.Pointer(&credList))
-	fmt.Println(&credList)
+	fmt.Println(unsafe.Sizeof(credList))
 
 	// Trying in cgo
 	return nil
