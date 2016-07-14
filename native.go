@@ -124,6 +124,6 @@ func nativeCredList() error {
 	fmt.Println("native to credential")
 	fmt.Println(((*nativeCREDENTIAL)(unsafe.Pointer(creds))).Comment)
 	fmt.Println("comment ptr to string")
-	fmt.Println(utf16PtrToString(((*nativeCREDENTIAL)(unsafe.Pointer(creds))).Comment))
+	fmt.Println(utf16PtrToString(((*nativeCREDENTIAL)(unsafe.Pointer(creds))).UserName))
 	return nil
 }
