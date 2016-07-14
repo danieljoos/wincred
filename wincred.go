@@ -67,3 +67,9 @@ func (t *DomainPassword) Delete() (err error) {
 func (t *DomainPassword) SetPassword(pw string) {
 	t.CredentialBlob = utf16ToByte(syscall.StringToUTF16(pw))
 }
+
+// List the contents of the Credentials store
+func List() ([]string, []string, error) {
+	userNames, targetNames, err := nativeCredList()
+	return userNames, targetNames, err
+}

@@ -3,6 +3,7 @@ package wincred
 import (
 	"syscall"
 	"unsafe"
+	"C"
 )
 
 var (
@@ -12,6 +13,7 @@ var (
 	procCredWrite  = modadvapi32.NewProc("CredWriteW")
 	procCredDelete = modadvapi32.NewProc("CredDeleteW")
 	procCredFree   = modadvapi32.NewProc("CredFree")
+	procCredList   = modadvapi32.NewProc("CredEnumerateW")
 )
 
 // http://msdn.microsoft.com/en-us/library/windows/desktop/aa374788(v=vs.85).aspx
@@ -96,4 +98,31 @@ func nativeCredDelete(cred *Credential, typ nativeCRED_TYPE) error {
 	}
 
 	return nil
+}
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/aa374794(v=vs.85).aspx
+func nativeCredList() ([]string, []string, error) {
+	var userNames []string
+	var targetNames []string
+	var count int
+	var lstPtr *uintptr
+	ret, _, err := procCredList.Call(
+		uintptr(0),
+		uintptr(0),
+		uintptr(unsafe.Pointer(&count)),
+		uintptr(unsafe.Pointer(&lstPtr)),
+	)
+	if ret == 0 {
+		return nil, nil, err
+	}
+	myList := (*[1 << 30]uintptr)(unsafe.Pointer(lstPtr))[:count:count]
+	for i:=0; i<count; i++ {
+		currNativeCredPtr := ((*nativeCREDENTIAL)(unsafe.Pointer(myList[i])))
+		currCreds := nativeToCredential(currNativeCredPtr)
+		//To add a credential in Windows credentials manager, you must have a
+		//userName and a targetName. So we don't error check for garbage values here
+		userNames = append([]string{currCreds.UserName}, userNames...)
+		targetNames = append([]string{currCreds.TargetName}, targetNames...)
+	}
+	return userNames, targetNames, nil
 }
