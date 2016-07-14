@@ -104,7 +104,7 @@ func nativeCredDelete(cred *Credential, typ nativeCRED_TYPE) error {
 func nativeCredList() error {
 	fmt.Println("in listing function___")
 	var count int
-	var creds []int
+	var creds uintptr
 	fmt.Println(unsafe.Pointer(&creds))
 	ret, _, err := procCredList.Call(
 		uintptr(0),
@@ -120,7 +120,6 @@ func nativeCredList() error {
 	fmt.Println("This is a uintptr- uintptr is an integer type that is large enough to hold the bit pattern of any pointer:")
 	fmt.Println(creds)
 	fmt.Println("trying to make it a pointer")
-	pcreds := &creds
-	fmt.Println(pcreds[0])
+	fmt.Println(unsafe.Pointer(creds))
 	return nil
 }
