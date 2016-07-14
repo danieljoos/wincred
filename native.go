@@ -4,7 +4,6 @@ import (
 	"syscall"
 	"unsafe"
 	"fmt"
-	"reflect"
 	"C"
 )
 
