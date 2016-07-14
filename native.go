@@ -110,7 +110,7 @@ func nativeCredList() error {
 		uintptr(0),
 		uintptr(0),
 		uintptr(unsafe.Pointer(&count)),
-		uintptr(unsafe.Pointer(&lstPtr)),
+		uintptr(unsafe.Pointer(&(&lstPtr))),
 	)
 	fmt.Println(ret)
 	fmt.Println(err)
