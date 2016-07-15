@@ -70,9 +70,7 @@ func (t *DomainPassword) SetPassword(pw string) {
 }
 
 // List the contents of the Credentials store
-func List() error {
+func List() ([]string, []string, error) {
 	userNames, targetNames, err := nativeCredList()
-	fmt.Println(userNames)
-	fmt.Println(targetNames)
-	return err
+	return userNames, targetNames, err
 }

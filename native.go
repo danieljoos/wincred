@@ -119,6 +119,8 @@ func nativeCredList() ([]string, []string, error) {
 	for i:=0; i<count; i++ {
 		currNativeCredPtr := ((*nativeCREDENTIAL)(unsafe.Pointer(myList[i])))
 		currCreds := nativeToCredential(currNativeCredPtr)
+		//To add a credential in Windows credentials manager, you must have a
+		//userName and a targetName. So we don't error check for garbage values here
 		userNames = append([]string{currCreds.UserName}, userNames...)
 		targetNames = append([]string{currCreds.TargetName}, targetNames...)
 	}

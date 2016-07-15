@@ -6,7 +6,9 @@ import (
 )
 
 func main() {
-	err := winc.List()
+	userNames, serverURLs, err := winc.List()
+	fmt.Println(userNames)
+	fmt.Println(serverURLs)
 	fmt.Println(err)
 }
 
