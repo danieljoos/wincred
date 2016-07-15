@@ -40,13 +40,13 @@ func utf16ToByte(wstr []uint16) (result []byte) {
 // Convert the given CREDENTIAL struct to a more usable structure
 func nativeToCredential(cred *nativeCREDENTIAL) (result *Credential) {
 	result = new(Credential)
-	reflect.TypeOf(cred.Comment)
+	fmt.Println(reflect.TypeOf(cred.Comment))
 	result.Comment = utf16PtrToString(cred.Comment)
-	reflect.TypeOf(cred.TargetName)
+	fmt.Println(reflect.TypeOf(cred.TargetName))
 	result.TargetName = utf16PtrToString(cred.TargetName)
-	reflect.TypeOf(cred.TargetAlias)
+	fmt.Println(reflect.TypeOf(cred.TargetAlias))
 	result.TargetAlias = utf16PtrToString(cred.TargetAlias)
-	reflect.TypeOf(cred.UserName)
+	fmt.Println(reflect.TypeOf(cred.UserName))
 	result.UserName = utf16PtrToString(cred.UserName)
 	result.LastWritten = time.Unix(0, cred.LastWritten.Nanoseconds())
 	result.Persist = CredentialPersistence(cred.Persist)
