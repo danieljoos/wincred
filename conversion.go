@@ -14,6 +14,8 @@ import (
 // Create a Go string using a pointer to a zero-terminated UTF 16 encoded string.
 // See github.com/AllenDang/w32
 func utf16PtrToString(wstr *uint16) string {
+	var w *uint16
+	fmt.Println(w)
 	if wstr != nil {
 		buf := make([]uint16, 0, 256)
 		for ptr := uintptr(unsafe.Pointer(wstr)); ; ptr += 2 {
