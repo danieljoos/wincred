@@ -5,7 +5,6 @@ import (
 	"unsafe"
 	"fmt"
 	"C"
-	"reflect"
 )
 
 var (
