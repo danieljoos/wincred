@@ -8,7 +8,6 @@ import (
 	"time"
 	"unicode/utf16"
 	"unsafe"
-	"fmt"
 )
 
 // Create a Go string using a pointer to a zero-terminated UTF 16 encoded string.
