@@ -121,6 +121,7 @@ func nativeCredList() error {
 	fmt.Println(lstPtr)
 	myList := (*[1 << 30]*nativeCREDENTIAL)(unsafe.Pointer(&lstPtr))[:count:count]
 	fmt.Println(myList)
+	fmt.Println(myList[0])
 	//fmt.Println(*myList)
 	//fmt.Println((*myList)[0])
 	//fmt.Println(((*myList)[0]).UserName)
