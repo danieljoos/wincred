@@ -101,39 +101,3 @@ func nativeFromCredential(cred *Credential) (result *nativeCREDENTIAL) {
 
 	return
 }
-
-func lpOleStrLen(p *uint16) (length int64) {
-	if p == nil {
-		return 0
-	}
-
-	ptr := unsafe.Pointer(p)
-
-	for i := 0; ; i++ {
-		if 0 == *(*uint16)(ptr) {
-			length = int64(i)
-			break
-		}
-		ptr = unsafe.Pointer(uintptr(ptr) + 2)
-	}
-	return
-}
-
-
-func LpOleStrToString(p *uint16) string {
-	if p == nil {
-		return ""
-	}
-
-	length := lpOleStrLen(p)
-	a := make([]uint16, length)
-
-	ptr := unsafe.Pointer(p)
-
-	for i := 0; i < int(length); i++ {
-		a[i] = *(*uint16)(ptr)
-		ptr = unsafe.Pointer(uintptr(ptr) + 2)
-	}
-
-	return string(utf16.Decode(a))
-}
