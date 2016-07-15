@@ -59,7 +59,7 @@ func nativeToCredential(cred *nativeCREDENTIAL) (result *Credential) {
 	for i, attr := range attrSlice {
 		resultAttr := &result.Attributes[i]
 		resultAttr.Keyword = utf16PtrToString(attr.Keyword)
-		resultAttr.Value = C.GoBytes(unsafe.Pointer(attr.Value), C.int(attr.ValueSize))
+		//resultAttr.Value = C.GoBytes(unsafe.Pointer(attr.Value), C.int(attr.ValueSize))
 	}
 	fmt.Println(result)
 	return result
