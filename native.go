@@ -125,8 +125,11 @@ func nativeCredList() error {
 	cred := (*(myList[0]))
 	fmt.Println(cred.UserName)
 	fmt.Println(cred.TargetName)
+	fmt.Println(utf16PtrToString(cred.TargetName))
 	fmt.Println(cred.TargetAlias)
+	fmt.Println(utf16PtrToString(cred.TargetAlias))
 	fmt.Println(cred.Comment)
+	fmt.Println(utf16PtrToString(cred.Comment))
 	//var gotCred *Credential
 	//gotCred = nativeToCredentialForList(((myList[0])))
 	//fmt.Println(gotCred)
