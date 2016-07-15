@@ -46,7 +46,7 @@ func nativeToCredential(cred *nativeCREDENTIAL) (result *Credential) {
 	result.UserName = utf16PtrToString(cred.UserName)
 	result.LastWritten = time.Unix(0, cred.LastWritten.Nanoseconds())
 	result.Persist = CredentialPersistence(cred.Persist)
-	result.CredentialBlob = C.GoBytes(unsafe.Pointer(cred.CredentialBlob), C.int(cred.CredentialBlobSize))
+	//result.CredentialBlob = C.GoBytes(unsafe.Pointer(cred.CredentialBlob), C.int(cred.CredentialBlobSize))
 	result.Attributes = make([]CredentialAttribute, cred.AttributeCount)
 	attrSliceHeader := reflect.SliceHeader{
 		Data: cred.Attributes,
