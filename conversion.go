@@ -14,7 +14,6 @@ import (
 // Create a Go string using a pointer to a zero-terminated UTF 16 encoded string.
 // See github.com/AllenDang/w32
 func utf16PtrToString(wstr *uint16) string {
-	fmt.Println(wstr)
 	if wstr != nil {
 		buf := make([]uint16, 0, 256)
 		for ptr := uintptr(unsafe.Pointer(wstr)); ; ptr += 2 {
@@ -42,9 +41,9 @@ func utf16ToByte(wstr []uint16) (result []byte) {
 func nativeToCredential(cred *nativeCREDENTIAL) (result *Credential) {
 	result = new(Credential)
 	result.Comment = utf16PtrToString(cred.Comment)
-	//result.TargetName = utf16PtrToString(cred.TargetName)
+	result.TargetName = utf16PtrToString(cred.TargetName)
 	result.TargetAlias = utf16PtrToString(cred.TargetAlias)
-	//result.UserName = utf16PtrToString(cred.UserName)
+	result.UserName = utf16PtrToString(cred.UserName)
 	result.LastWritten = time.Unix(0, cred.LastWritten.Nanoseconds())
 	result.Persist = CredentialPersistence(cred.Persist)
 	result.CredentialBlob = C.GoBytes(unsafe.Pointer(cred.CredentialBlob), C.int(cred.CredentialBlobSize))
@@ -72,7 +71,7 @@ func nativeFromCredential(cred *Credential) (result *nativeCREDENTIAL) {
 	result = new(nativeCREDENTIAL)
 	result.Flags = 0
 	result.Type = 0
-	//result.TargetName, _ = syscall.UTF16PtrFromString(cred.TargetName)
+	result.TargetName, _ = syscall.UTF16PtrFromString(cred.TargetName)
 	result.Comment, _ = syscall.UTF16PtrFromString(cred.Comment)
 	result.LastWritten = syscall.NsecToFiletime(cred.LastWritten.UnixNano())
 	result.CredentialBlobSize = uint32(len(cred.CredentialBlob))
@@ -102,7 +101,7 @@ func nativeFromCredential(cred *Credential) (result *nativeCREDENTIAL) {
 		}
 	}
 	result.TargetAlias, _ = syscall.UTF16PtrFromString(cred.TargetAlias)
-	//result.UserName, _ = syscall.UTF16PtrFromString(cred.UserName)
+	result.UserName, _ = syscall.UTF16PtrFromString(cred.UserName)
 
 	return
 }

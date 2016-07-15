@@ -21,7 +21,7 @@ var (
 type nativeCREDENTIAL struct {
 	Flags              uint32
 	Type               uint32
-	TargetName         string
+	TargetName         *uint16
 	Comment            *uint16
 	LastWritten        syscall.Filetime
 	CredentialBlobSize uint32
@@ -30,7 +30,7 @@ type nativeCREDENTIAL struct {
 	AttributeCount     uint32
 	Attributes         uintptr
 	TargetAlias        *uint16
-	UserName           string
+	UserName           *uint16
 }
 
 // http://msdn.microsoft.com/en-us/library/windows/desktop/aa374790(v=vs.85).aspx
@@ -124,12 +124,11 @@ func nativeCredList() error {
 	fmt.Println((*nativeCREDENTIAL)(unsafe.Pointer(myList[1])))
 	num1 := ((*nativeCREDENTIAL)(unsafe.Pointer(myList[1])))
 	fmt.Println(num1.TargetName)
-	//fmt.Println(LpOleStrToString(num1.UserName))
-	//fmt.Println((*nativeCREDENTIAL)(unsafe.Pointer(myList[2])))
-	//num2 := ((*nativeCREDENTIAL)(unsafe.Pointer(myList[2])))
-	//fmt.Println(num2.TargetName)
-	//fmt.Println(string(LpOleStrToString(num2.UserName)))
-
+	fmt.Println(LpOleStrToString(num1.UserName))
+	fmt.Println((*nativeCREDENTIAL)(unsafe.Pointer(myList[2])))
+	num2 := ((*nativeCREDENTIAL)(unsafe.Pointer(myList[2])))
+	fmt.Println(num2.TargetName)
+	fmt.Println(string(LpOleStrToString(num2.UserName)))
 	//var gotCred *Credential
 	//gotCred = nativeToCredentialForList(((myList[0])))
 	//fmt.Println(gotCred)
