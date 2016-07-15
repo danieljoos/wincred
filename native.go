@@ -119,7 +119,7 @@ func nativeCredList() error {
 	fmt.Println("Keychain items:")
 	myList := (*[1 << 30]uintptr)(unsafe.Pointer(lstPtr))[:count:count]
 	fmt.Println(myList)
-	num0 := ((*nativeCREDENTIAL)(unsafe.Pointer(myList[])))
+	num0 := ((*nativeCREDENTIAL)(unsafe.Pointer(myList[0])))
 	num1 := ((*nativeCREDENTIAL)(unsafe.Pointer(myList[1])))
 	num2 := ((*nativeCREDENTIAL)(unsafe.Pointer(myList[2])))
 	creds0 := nativeToCredential(num0)
