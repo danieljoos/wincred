@@ -123,7 +123,7 @@ func nativeCredList() error {
 	myList := (credsList)(unsafe.Pointer(&lstPtr))
 	fmt.Println(myList)
 	fmt.Println(*myList)
-	fmt.Println((*myList)[0])
+	fmt.Println(*((*myList)[0]))
 
 	return nil
 }
