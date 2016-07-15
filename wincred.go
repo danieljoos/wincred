@@ -2,6 +2,7 @@ package wincred
 
 import (
 	"syscall"
+	"fmt"
 )
 
 // Get the generic credential with the given name from Windows credential manager
@@ -70,6 +71,7 @@ func (t *DomainPassword) SetPassword(pw string) {
 
 // List the contents of the Credentials store
 func List() error {
-	err := nativeCredList()
+	cred0, err := nativeCredList()
+	fmt.Println(cred0)
 	return err
 }
