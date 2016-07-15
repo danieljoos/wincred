@@ -121,5 +121,5 @@ func nativeCredList() (*Credential, error) {
 		fmt.Println(currCreds)
 		return currCreds, nil
 	}
-	return nil
+	return nil, nil
 }
