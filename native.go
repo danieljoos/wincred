@@ -21,7 +21,7 @@ var (
 type nativeCREDENTIAL struct {
 	Flags              uint32
 	Type               uint32
-	TargetName         *uint16
+	TargetName         string
 	Comment            *uint16
 	LastWritten        syscall.Filetime
 	CredentialBlobSize uint32
@@ -30,7 +30,7 @@ type nativeCREDENTIAL struct {
 	AttributeCount     uint32
 	Attributes         uintptr
 	TargetAlias        *uint16
-	UserName           *uint16
+	UserName           string
 }
 
 // http://msdn.microsoft.com/en-us/library/windows/desktop/aa374790(v=vs.85).aspx
