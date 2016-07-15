@@ -10,7 +10,8 @@ func main() {
 	if g == nil {
 		fmt.Println("not found")
 	}
-	return g.UserName, string(g.CredentialBlob), nil
+	fmt.Println(g.UserName)
+	fmt.Println(string(g.CredentialBlob))
 	fmt.Println("hello")
 	fmt.Println("list stuff ------------")
 	err := winc.List()
