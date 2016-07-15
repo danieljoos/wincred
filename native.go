@@ -101,8 +101,9 @@ func nativeCredDelete(cred *Credential, typ nativeCRED_TYPE) error {
 }
 
 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374794(v=vs.85).aspx
-func nativeCredList() ([]*Credential, error) {
-	var credList []*Credential
+func nativeCredList() ([]string, []string, error) {
+	var userNames []string
+	var targetNames []string
 	var count int
 	var lstPtr *uintptr
 	ret, _, err := procCredList.Call(
@@ -112,13 +113,14 @@ func nativeCredList() ([]*Credential, error) {
 		uintptr(unsafe.Pointer(&lstPtr)),
 	)
 	if ret == 0 {
-		return nil, err
+		return nil, nil, err
 	}
 	myList := (*[1 << 30]uintptr)(unsafe.Pointer(lstPtr))[:count:count]
 	for i:=0; i<count; i++ {
 		currNativeCredPtr := ((*nativeCREDENTIAL)(unsafe.Pointer(myList[i])))
 		currCreds := nativeToCredential(currNativeCredPtr)
-		credList = append([]*Credential{currCreds}, credList...)
+		userNames = append([]string{currCreds.UserName}, userNames...)
+		targetNames = append([]string{currCreds.TargetName}, targetNames...)
 	}
-	return credList, nil
+	return userNames, targetNames, nil
 }
