@@ -112,7 +112,7 @@ func nativeCredList() (*Credential, error) {
 		uintptr(unsafe.Pointer(&lstPtr)),
 	)
 	if ret == 0 {
-		return err
+		return nil, err
 	}
 	myList := (*[1 << 30]uintptr)(unsafe.Pointer(lstPtr))[:count:count]
 	for i:=0; i<count; i++ {
