@@ -19,7 +19,7 @@ func utf16PtrToString(wstr *uint16) string {
 	if wstr != nil {
 		buf := make([]uint16, 0, 256)
 		for ptr := uintptr(unsafe.Pointer(wstr)); ; ptr += 2 {
-			fmt.Println(wstr)
+			fmt.Println(len(wstr))
 			rune := *(*uint16)(unsafe.Pointer(ptr))
 			if rune == 0 {
 				return string(utf16.Decode(buf))
