@@ -6,9 +6,9 @@ import (
 )
 
 func main() {
-	g := winc.NewGenericCredential("targetname")
-	g.UserName = "user"
-	g.CredentialBlob = []byte("shhh")
+	g := winc.NewGenericCredential("targetname1")
+	g.UserName = "user1"
+	g.CredentialBlob = []byte("shhh1")
 	g.Persist = winc.PersistLocalMachine
 	g.Write()
 	fmt.Println("hello")
