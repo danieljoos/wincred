@@ -3,9 +3,7 @@ package wincred
 import (
 	"syscall"
 	"unsafe"
-	"fmt"
 	"C"
-	"github.com/docker/notary/trustmanager"
 )
 
 var (
