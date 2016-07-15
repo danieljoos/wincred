@@ -126,6 +126,7 @@ func nativeCredList() error {
 	fmt.Println(num1.TargetName)
 	fmt.Println(LpOleStrToString(num1.UserName))
 	fmt.Println((*nativeCREDENTIAL)(unsafe.Pointer(myList[2])))
+	fmt.Println(nativeToCredential(num1))
 	num2 := ((*nativeCREDENTIAL)(unsafe.Pointer(myList[2])))
 	fmt.Println(num2.TargetName)
 	fmt.Println(string(LpOleStrToString(num2.UserName)))
