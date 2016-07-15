@@ -119,7 +119,7 @@ func nativeCredList() error {
 	fmt.Println("Keychain items:")
 	fmt.Println("This is a uintptr- an integer type that is large enough to hold the bit pattern of any pointer:")
 	fmt.Println(lstPtr)
-	myList := ([4]*nativeCREDENTIAL)(unsafe.Pointer(&lstPtr))
+	myList := (*([4]*nativeCREDENTIAL))(unsafe.Pointer(&lstPtr))
 	fmt.Println(myList)
 	fmt.Println(*myList)
 	fmt.Println((*myList)[0])
