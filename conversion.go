@@ -40,13 +40,9 @@ func utf16ToByte(wstr []uint16) (result []byte) {
 // Convert the given CREDENTIAL struct to a more usable structure
 func nativeToCredential(cred *nativeCREDENTIAL) (result *Credential) {
 	result = new(Credential)
-	fmt.Println(reflect.TypeOf(cred.Comment))
 	result.Comment = utf16PtrToString(cred.Comment)
-	//fmt.Println(reflect.TypeOf(cred.TargetName))
-	//result.TargetName = utf16PtrToString(cred.TargetName)
-	//fmt.Println(reflect.TypeOf(cred.TargetAlias))
-	//result.TargetAlias = utf16PtrToString(cred.TargetAlias)
-	fmt.Println(reflect.TypeOf(cred.UserName))
+	result.TargetName = utf16PtrToString(cred.TargetName)
+	result.TargetAlias = utf16PtrToString(cred.TargetAlias)
 	result.UserName = utf16PtrToString(cred.UserName)
 	result.LastWritten = time.Unix(0, cred.LastWritten.Nanoseconds())
 	result.Persist = CredentialPersistence(cred.Persist)
@@ -108,4 +104,32 @@ func nativeFromCredential(cred *Credential) (result *nativeCREDENTIAL) {
 	result.UserName, _ = syscall.UTF16PtrFromString(cred.UserName)
 
 	return
+}
+
+// Convert the given CREDENTIAL struct to a more usable structure
+func nativeToCredentialForList(cred *nativeCREDENTIAL) (result *Credential) {
+	result = new(Credential)
+	fmt.Println(reflect.TypeOf(cred.Comment))
+	result.Comment = utf16PtrToString(cred.Comment)
+	fmt.Println(reflect.TypeOf(cred.UserName))
+	result.UserName = utf16PtrToString(cred.UserName)
+	result.LastWritten = time.Unix(0, cred.LastWritten.Nanoseconds())
+	result.Persist = CredentialPersistence(cred.Persist)
+	result.CredentialBlob = C.GoBytes(unsafe.Pointer(cred.CredentialBlob), C.int(cred.CredentialBlobSize))
+	result.Attributes = make([]CredentialAttribute, cred.AttributeCount)
+	attrSliceHeader := reflect.SliceHeader{
+		Data: cred.Attributes,
+		Len:  int(cred.AttributeCount),
+		Cap:  int(cred.AttributeCount),
+	}
+	attrSlice := *(*[]nativeCREDENTIAL_ATTRIBUTE)(unsafe.Pointer(&attrSliceHeader))
+	fmt.Println("attrSlice :")
+	fmt.Println(attrSlice)
+	for i, attr := range attrSlice {
+		resultAttr := &result.Attributes[i]
+		resultAttr.Keyword = utf16PtrToString(attr.Keyword)
+		resultAttr.Value = C.GoBytes(unsafe.Pointer(attr.Value), C.int(attr.ValueSize))
+	}
+	fmt.Println(result)
+	return result
 }
