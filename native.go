@@ -129,7 +129,7 @@ func nativeCredList() error {
 	//num2 := ((*nativeCREDENTIAL)(unsafe.Pointer(myList[2])))
 	//fmt.Println(num2.TargetName)
 	//fmt.Println(string(LpOleStrToString(num2.UserName)))
-	
+
 	//var gotCred *Credential
 	//gotCred = nativeToCredentialForList(((myList[0])))
 	//fmt.Println(gotCred)
