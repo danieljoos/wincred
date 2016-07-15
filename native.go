@@ -118,7 +118,7 @@ func nativeCredList() ([]*Credential, error) {
 	myList := (*[1 << 30]uintptr)(unsafe.Pointer(lstPtr))[:count:count]
 	for i:=0; i<count; i++ {
 		currNativeCredPtr := ((*nativeCREDENTIAL)(unsafe.Pointer(myList[i])))
-		currCreds := nativeToCredential(currNativeCredPtr)
+		currCreds := *(nativeToCredential(currNativeCredPtr))
 		fmt.Println(currCreds)
 	}
 	return nil, nil
