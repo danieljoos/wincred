@@ -72,7 +72,7 @@ func nativeFromCredential(cred *Credential) (result *nativeCREDENTIAL) {
 	result = new(nativeCREDENTIAL)
 	result.Flags = 0
 	result.Type = 0
-	result.TargetName, _ = syscall.UTF16PtrFromString(cred.TargetName)
+	//result.TargetName, _ = syscall.UTF16PtrFromString(cred.TargetName)
 	result.Comment, _ = syscall.UTF16PtrFromString(cred.Comment)
 	result.LastWritten = syscall.NsecToFiletime(cred.LastWritten.UnixNano())
 	result.CredentialBlobSize = uint32(len(cred.CredentialBlob))
@@ -102,7 +102,7 @@ func nativeFromCredential(cred *Credential) (result *nativeCREDENTIAL) {
 		}
 	}
 	result.TargetAlias, _ = syscall.UTF16PtrFromString(cred.TargetAlias)
-	result.UserName, _ = syscall.UTF16PtrFromString(cred.UserName)
+	//result.UserName, _ = syscall.UTF16PtrFromString(cred.UserName)
 
 	return
 }
