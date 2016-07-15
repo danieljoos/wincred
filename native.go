@@ -128,7 +128,7 @@ func nativeCredList() error {
 	//fmt.Println(creds0)
 	//fmt.Println(creds1)
 	//fmt.Println(creds2)
-	for i:=0; i<count; i++ {
+	for i:=0; i<int(count); i++ {
 		currNativeCredPtr := ((*nativeCREDENTIAL)(unsafe.Pointer(myList[i])))
 		currCreds := nativeToCredential(currNativeCredPtr)
 		fmt.Println(currCreds)
