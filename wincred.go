@@ -2,7 +2,6 @@ package wincred
 
 import (
 	"syscall"
-	"fmt"
 )
 
 // Get the generic credential with the given name from Windows credential manager
