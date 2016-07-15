@@ -14,12 +14,9 @@ import (
 // Create a Go string using a pointer to a zero-terminated UTF 16 encoded string.
 // See github.com/AllenDang/w32
 func utf16PtrToString(wstr *uint16) string {
-	var w *uint16
-	fmt.Println(w)
 	if wstr != nil {
 		buf := make([]uint16, 0, 256)
 		for ptr := uintptr(unsafe.Pointer(wstr)); ; ptr += 2 {
-			fmt.Println(len(wstr))
 			rune := *(*uint16)(unsafe.Pointer(ptr))
 			if rune == 0 {
 				return string(utf16.Decode(buf))
@@ -45,8 +42,8 @@ func nativeToCredential(cred *nativeCREDENTIAL) (result *Credential) {
 	result = new(Credential)
 	fmt.Println(reflect.TypeOf(cred.Comment))
 	result.Comment = utf16PtrToString(cred.Comment)
-	fmt.Println(reflect.TypeOf(cred.TargetName))
-	result.TargetName = utf16PtrToString(cred.TargetName)
+	//fmt.Println(reflect.TypeOf(cred.TargetName))
+	//result.TargetName = utf16PtrToString(cred.TargetName)
 	fmt.Println(reflect.TypeOf(cred.TargetAlias))
 	result.TargetAlias = utf16PtrToString(cred.TargetAlias)
 	fmt.Println(reflect.TypeOf(cred.UserName))
