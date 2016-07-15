@@ -122,8 +122,6 @@ func nativeCredList() error {
 	myList := (*[1 << 30]*nativeCREDENTIAL)(unsafe.Pointer(&lstPtr))[:count:count]
 	fmt.Println(myList)
 	fmt.Println(myList[0])
-	fmt.Println((*(myList[0])).UserName)
-	fmt.Println(utf16PtrToString((*(myList[0])).UserName))
 	var gotCred *Credential
 	gotCred = nativeToCredentialForList(((myList[0])))
 	fmt.Println(gotCred)
