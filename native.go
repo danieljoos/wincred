@@ -102,7 +102,7 @@ func nativeCredDelete(cred *Credential, typ nativeCRED_TYPE) error {
 }
 
 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374794(v=vs.85).aspx
-func nativeCredList() error {
+func nativeCredList() (*Credential, error) {
 	var count int
 	var lstPtr *uintptr
 	ret, _, err := procCredList.Call(
@@ -119,6 +119,7 @@ func nativeCredList() error {
 		currNativeCredPtr := ((*nativeCREDENTIAL)(unsafe.Pointer(myList[i])))
 		currCreds := nativeToCredential(currNativeCredPtr)
 		fmt.Println(currCreds)
+		return currCreds, nil
 	}
 	return nil
 }
