@@ -124,22 +124,10 @@ func nativeCredList() error {
 	fmt.Println(myList)
 	fmt.Println(myList[0])
 	cred := (*(myList[0]))
-	result := new(Credential)
-	result.Attributes = make([]CredentialAttribute, cred.AttributeCount)
-	attrSliceHeader := reflect.SliceHeader{
-		Data: cred.Attributes,
-		Len:  int(cred.AttributeCount),
-		Cap:  int(cred.AttributeCount),
-	}
-	attrSlice := *(*[]nativeCREDENTIAL_ATTRIBUTE)(unsafe.Pointer(&attrSliceHeader))
-	fmt.Println("attrSlice :")
-	fmt.Println(attrSlice)
-	for i, attr := range attrSlice {
-		resultAttr := &result.Attributes[i]
-		resultAttr.Keyword = utf16PtrToString(attr.Keyword)
-		resultAttr.Value = C.GoBytes(unsafe.Pointer(attr.Value), C.int(attr.ValueSize))
-	}
-	fmt.Println(result)
+	fmt.Println(cred.UserName)
+	fmt.Println(cred.TargetName)
+	fmt.Println(cred.TargetAlias)
+	fmt.Println(cred.Comment)
 	//var gotCred *Credential
 	//gotCred = nativeToCredentialForList(((myList[0])))
 	//fmt.Println(gotCred)
