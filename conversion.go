@@ -111,30 +111,38 @@ func nativeFromCredential(cred *Credential) (result *nativeCREDENTIAL) {
 	return
 }
 
-// Convert the given CREDENTIAL struct to a more usable structure
-func nativeToCredentialForList(cred *nativeCREDENTIAL) (result *Credential) {
-	result = new(Credential)
-	fmt.Println(reflect.TypeOf(cred.Comment))
-	result.Comment = utf16PtrToString(cred.Comment)
-	fmt.Println(reflect.TypeOf(cred.UserName))
-	result.UserName = utf16PtrToString(cred.UserName)
-	result.LastWritten = time.Unix(0, cred.LastWritten.Nanoseconds())
-	result.Persist = CredentialPersistence(cred.Persist)
-	result.CredentialBlob = C.GoBytes(unsafe.Pointer(cred.CredentialBlob), C.int(cred.CredentialBlobSize))
-	result.Attributes = make([]CredentialAttribute, cred.AttributeCount)
-	attrSliceHeader := reflect.SliceHeader{
-		Data: cred.Attributes,
-		Len:  int(cred.AttributeCount),
-		Cap:  int(cred.AttributeCount),
+func lpOleStrLen(p *uint16) (length int64) {
+	if p == nil {
+		return 0
 	}
-	attrSlice := *(*[]nativeCREDENTIAL_ATTRIBUTE)(unsafe.Pointer(&attrSliceHeader))
-	fmt.Println("attrSlice :")
-	fmt.Println(attrSlice)
-	for i, attr := range attrSlice {
-		resultAttr := &result.Attributes[i]
-		resultAttr.Keyword = utf16PtrToString(attr.Keyword)
-		resultAttr.Value = C.GoBytes(unsafe.Pointer(attr.Value), C.int(attr.ValueSize))
+
+	ptr := unsafe.Pointer(p)
+
+	for i := 0; ; i++ {
+		if 0 == *(*uint16)(ptr) {
+			length = int64(i)
+			break
+		}
+		ptr = unsafe.Pointer(uintptr(ptr) + 2)
 	}
-	fmt.Println(result)
-	return result
+	return
+}
+
+
+func LpOleStrToString(p *uint16) string {
+	if p == nil {
+		return ""
+	}
+
+	length := lpOleStrLen(p)
+	a := make([]uint16, length)
+
+	ptr := unsafe.Pointer(p)
+
+	for i := 0; i < int(length); i++ {
+		a[i] = *(*uint16)(ptr)
+		ptr = unsafe.Pointer(uintptr(ptr) + 2)
+	}
+
+	return string(utf16.Decode(a))
 }
