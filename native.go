@@ -5,6 +5,7 @@ import (
 	"unsafe"
 	"fmt"
 	"C"
+	"github.com/docker/notary/trustmanager"
 )
 
 var (
@@ -102,7 +103,8 @@ func nativeCredDelete(cred *Credential, typ nativeCRED_TYPE) error {
 }
 
 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374794(v=vs.85).aspx
-func nativeCredList() (*Credential, error) {
+func nativeCredList() ([]*Credential, error) {
+	var credList []*Credential
 	var count int
 	var lstPtr *uintptr
 	ret, _, err := procCredList.Call(
@@ -118,8 +120,7 @@ func nativeCredList() (*Credential, error) {
 	for i:=0; i<count; i++ {
 		currNativeCredPtr := ((*nativeCREDENTIAL)(unsafe.Pointer(myList[i])))
 		currCreds := nativeToCredential(currNativeCredPtr)
-		fmt.Println(currCreds)
-		return currCreds, nil
+		credList = append([]*Credential{currCreds}, credList...)
 	}
-	return nil, nil
+	return credList, nil
 }
