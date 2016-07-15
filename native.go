@@ -119,17 +119,8 @@ func nativeCredList() error {
 	fmt.Println("Keychain items:")
 	fmt.Println("This is a uintptr- an integer type that is large enough to hold the bit pattern of any pointer:")
 	fmt.Println(lstPtr)
-	myList := (*[1 << 30]*nativeCREDENTIAL)(unsafe.Pointer(&lstPtr))[:count:count]
+	myList := (*[1 << 30]uintptr)(unsafe.Pointer(&lstPtr))[:count:count]
 	fmt.Println(myList)
-	fmt.Println(myList[0])
-	cred := (*(myList[0]))
-	fmt.Println(cred.UserName)
-	fmt.Println(cred.TargetName)
-	fmt.Println(utf16PtrToString(cred.TargetName))
-	fmt.Println(cred.TargetAlias)
-	fmt.Println(utf16PtrToString(cred.TargetAlias))
-	fmt.Println(cred.Comment)
-	fmt.Println(utf16PtrToString(cred.Comment))
 	//var gotCred *Credential
 	//gotCred = nativeToCredentialForList(((myList[0])))
 	//fmt.Println(gotCred)
