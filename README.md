@@ -79,7 +79,7 @@ package main
 
 import (
     "fmt"
-    "wincred"
+    "github.com/danieljoos/wincred"
 )
 
 func main() {
