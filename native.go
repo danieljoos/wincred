@@ -1,19 +1,19 @@
 package wincred
 
 import (
+	"C"
 	"syscall"
 	"unsafe"
-	"C"
 )
 
 var (
 	modadvapi32 = syscall.NewLazyDLL("advapi32.dll")
 
-	procCredRead   = modadvapi32.NewProc("CredReadW")
-	procCredWrite  = modadvapi32.NewProc("CredWriteW")
-	procCredDelete = modadvapi32.NewProc("CredDeleteW")
-	procCredFree   = modadvapi32.NewProc("CredFree")
-	procCredList   = modadvapi32.NewProc("CredEnumerateW")
+	procCredRead      = modadvapi32.NewProc("CredReadW")
+	procCredWrite     = modadvapi32.NewProc("CredWriteW")
+	procCredDelete    = modadvapi32.NewProc("CredDeleteW")
+	procCredFree      = modadvapi32.NewProc("CredFree")
+	procCredEnumerate = modadvapi32.NewProc("CredEnumerateW")
 )
 
 // http://msdn.microsoft.com/en-us/library/windows/desktop/aa374788(v=vs.85).aspx
@@ -101,28 +101,31 @@ func nativeCredDelete(cred *Credential, typ nativeCRED_TYPE) error {
 }
 
 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374794(v=vs.85).aspx
-func nativeCredList() ([]string, []string, error) {
-	var userNames []string
-	var targetNames []string
+func nativeCredEnumerate(filter string, all bool) ([]*Credential, error) {
 	var count int
-	var lstPtr *uintptr
-	ret, _, err := procCredList.Call(
-		uintptr(0),
-		uintptr(0),
+	var pcreds uintptr
+	var filterPtr uintptr
+	if !all {
+		filterUtf16Ptr, _ := syscall.UTF16PtrFromString(filter)
+		filterPtr = uintptr(unsafe.Pointer(filterUtf16Ptr))
+	} else {
+		filterPtr = 0
+	}
+	ret, _, err := procCredEnumerate.Call(
+		filterPtr,
+		0,
 		uintptr(unsafe.Pointer(&count)),
-		uintptr(unsafe.Pointer(&lstPtr)),
+		uintptr(unsafe.Pointer(&pcreds)),
 	)
 	if ret == 0 {
-		return nil, nil, err
+		return nil, err
 	}
-	myList := (*[1 << 30]uintptr)(unsafe.Pointer(lstPtr))[:count:count]
-	for i:=0; i<count; i++ {
-		currNativeCredPtr := ((*nativeCREDENTIAL)(unsafe.Pointer(myList[i])))
-		currCreds := nativeToCredential(currNativeCredPtr)
-		//To add a credential in Windows credentials manager, you must have a
-		//userName and a targetName. So we don't error check for garbage values here
-		userNames = append([]string{currCreds.UserName}, userNames...)
-		targetNames = append([]string{currCreds.TargetName}, targetNames...)
+	defer procCredFree.Call(pcreds)
+	pcredsSlice := (*[1 << 30]uintptr)(unsafe.Pointer(pcreds))[:count:count]
+	creds := make([]*Credential, count)
+	for i := range creds {
+		creds[i] = nativeToCredential((*nativeCREDENTIAL)(unsafe.Pointer(pcredsSlice[i])))
 	}
-	return userNames, targetNames, nil
+
+	return creds, nil
 }
