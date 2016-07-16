@@ -72,3 +72,24 @@ func main() {
     cred.Delete()
 } 
 ```
+
+### List all available credentials
+```Go
+package main
+
+import (
+    "fmt"
+    "wincred"
+)
+
+func main() {
+    creds, err := wincred.List()
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    for i := range(creds) {
+        fmt.Println(creds[i].TargetName)
+    }
+}
+```
