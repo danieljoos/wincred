@@ -1,7 +1,6 @@
 package wincred
 
 import (
-	"C"
 	"syscall"
 	"unsafe"
 )
