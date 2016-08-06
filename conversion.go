@@ -37,6 +37,17 @@ func utf16ToByte(wstr []uint16) (result []byte) {
 	return
 }
 
+// Copies the given C byte array to a Go byte array (see `C.GoBytes`)
+func goBytes(src unsafe.Pointer, len uint32) []byte {
+	if src == nullPointer {
+		return []byte{}
+	}
+	slice := (*[1 << 30]byte)(src)[0:len]
+	rv := make([]byte, len)
+	copy(rv, slice)
+	return rv[:]
+}
+
 // Convert the given CREDENTIAL struct to a more usable structure
 func nativeToCredential(cred *nativeCREDENTIAL) (result *Credential) {
 	if unsafe.Pointer(cred) == nullPointer {
@@ -63,16 +74,6 @@ func nativeToCredential(cred *nativeCREDENTIAL) (result *Credential) {
 		resultAttr.Value = goBytes(unsafe.Pointer(attr.Value), attr.ValueSize)
 	}
 	return result
-}
-
-func goBytes(src unsafe.Pointer, len uint32) []byte {
-	if src == nullPointer {
-		return []byte{}
-	}
-	slice := (*[1 << 30]byte)(src)[0:len]
-	rv := make([]byte, len)
-	copy(rv, slice)
-	return rv[:]
 }
 
 // Convert the given Credential object back to a CREDENTIAL struct, which can be used for calling the
