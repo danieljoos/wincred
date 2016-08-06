@@ -9,6 +9,8 @@ import (
 	"unsafe"
 )
 
+var nullPointer = unsafe.Pointer(uintptr(0))
+
 // Create a Go string using a pointer to a zero-terminated UTF 16 encoded string.
 // See github.com/AllenDang/w32
 func utf16PtrToString(wstr *uint16) string {
@@ -37,6 +39,9 @@ func utf16ToByte(wstr []uint16) (result []byte) {
 
 // Convert the given CREDENTIAL struct to a more usable structure
 func nativeToCredential(cred *nativeCREDENTIAL) (result *Credential) {
+	if unsafe.Pointer(cred) == nullPointer {
+		return nil
+	}
 	result = new(Credential)
 	result.Comment = utf16PtrToString(cred.Comment)
 	result.TargetName = utf16PtrToString(cred.TargetName)
@@ -61,6 +66,9 @@ func nativeToCredential(cred *nativeCREDENTIAL) (result *Credential) {
 }
 
 func goBytes(src unsafe.Pointer, len uint32) []byte {
+	if src == nullPointer {
+		return []byte{}
+	}
 	slice := (*[1 << 30]byte)(src)[0:len]
 	rv := make([]byte, len)
 	copy(rv, slice)
@@ -70,6 +78,9 @@ func goBytes(src unsafe.Pointer, len uint32) []byte {
 // Convert the given Credential object back to a CREDENTIAL struct, which can be used for calling the
 // Windows APIs
 func nativeFromCredential(cred *Credential) (result *nativeCREDENTIAL) {
+	if cred == nil {
+		return nil
+	}
 	result = new(nativeCREDENTIAL)
 	result.Flags = 0
 	result.Type = 0
