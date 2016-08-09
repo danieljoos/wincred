@@ -54,6 +54,8 @@ const (
 	naCRED_TYPE_DOMAIN_VISIBLE_PASSWORD nativeCRED_TYPE = 0x4
 	naCRED_TYPE_GENERIC_CERTIFICATE     nativeCRED_TYPE = 0x5
 	naCRED_TYPE_DOMAIN_EXTENDED         nativeCRED_TYPE = 0x6
+
+	naERROR_NOT_FOUND = "Element not found."
 )
 
 // http://msdn.microsoft.com/en-us/library/windows/desktop/aa374804(v=vs.85).aspx
