@@ -28,6 +28,7 @@ func TestGenericCredential_EndToEnd(t *testing.T) {
 	// 3. Search it in the list
 	creds, err := List()
 	assert.Nil(t, err)
+	assert.NotNil(t, creds)
 	assert.NotEqual(t, 0, len(creds))
 	found := false
 	for i := range creds {
@@ -42,7 +43,7 @@ func TestGenericCredential_EndToEnd(t *testing.T) {
 	// 5. Search it again in the list. It should be gone.
 	creds, err = List()
 	assert.Nil(t, err)
-	assert.NotEqual(t, 0, len(creds))
+	assert.NotNil(t, creds)
 	found = false
 	for i := range creds {
 		found = found || creds[i].TargetName == testTargetName
