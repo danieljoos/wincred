@@ -51,37 +51,37 @@ func TestGenericCredential_EndToEnd(t *testing.T) {
 }
 
 func TestGetGenericCredential_NotFound(t *testing.T) {
-    cred, err := GetGenericCredential(testTargetNameMissing)
-    assert.Nil(t, cred)
-    assert.NotNil(t, err)
-    // ERROR_NOT_FOUND (1168):
-    // MSDN: https://msdn.microsoft.com/en-us/library/windows/desktop/ms681383(v=vs.85).aspx
-    assert.Equal(t, "Element not found.", err.Error())
+	cred, err := GetGenericCredential(testTargetNameMissing)
+	assert.Nil(t, cred)
+	assert.NotNil(t, err)
+	// ERROR_NOT_FOUND (1168):
+	// MSDN: https://msdn.microsoft.com/en-us/library/windows/desktop/ms681383(v=vs.85).aspx
+	assert.Equal(t, "Element not found.", err.Error())
 }
 
 func TestGetGenericCredential_Empty(t *testing.T) {
-    cred, err := GetGenericCredential("")
-    assert.Nil(t, cred)
-    assert.NotNil(t, err)
-    // ERROR_INVALID_PARAMETER (87):
-    // MSDN: https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382(v=vs.85).aspx
-    assert.Equal(t, "The parameter is incorrect.", err.Error())
+	cred, err := GetGenericCredential("")
+	assert.Nil(t, cred)
+	assert.NotNil(t, err)
+	// ERROR_INVALID_PARAMETER (87):
+	// MSDN: https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382(v=vs.85).aspx
+	assert.Equal(t, "The parameter is incorrect.", err.Error())
 }
 
 func TestGenericCredential_WriteEmpty(t *testing.T) {
-    cred := NewGenericCredential("")
-    err := cred.Write()
-    assert.NotNil(t, err)
-    // ERROR_INVALID_PARAMETER (87):
-    // MSDN: https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382(v=vs.85).aspx.
-    assert.Equal(t, "The parameter is incorrect.", err.Error())
+	cred := NewGenericCredential("")
+	err := cred.Write()
+	assert.NotNil(t, err)
+	// ERROR_INVALID_PARAMETER (87):
+	// MSDN: https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382(v=vs.85).aspx.
+	assert.Equal(t, "The parameter is incorrect.", err.Error())
 }
 
 func TestGenericCredential_DeleteNotFound(t *testing.T) {
-    cred := NewGenericCredential(testTargetNameMissing)
-    err := cred.Delete()
-    assert.NotNil(t, err)
-    // ERROR_NOT_FOUND (1168):
-    // MSDN: https://msdn.microsoft.com/en-us/library/windows/desktop/ms681383(v=vs.85).aspx
-    assert.Equal(t, "Element not found.", err.Error())
+	cred := NewGenericCredential(testTargetNameMissing)
+	err := cred.Delete()
+	assert.NotNil(t, err)
+	// ERROR_NOT_FOUND (1168):
+	// MSDN: https://msdn.microsoft.com/en-us/library/windows/desktop/ms681383(v=vs.85).aspx
+	assert.Equal(t, "Element not found.", err.Error())
 }
