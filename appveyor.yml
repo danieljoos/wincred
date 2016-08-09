@@ -21,4 +21,4 @@ test_script:
 - cmd: >-
     cd %GOPATH%/src/github.com/danieljoos/wincred
 
-    go test -v
+    go test -v -cover
