@@ -9,6 +9,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func fixtureCredential() (cred *Credential) {
+	cred = new(Credential)
+	cred.TargetName = "Foo"
+	cred.Comment = "Bar"
+	cred.LastWritten = time.Now()
+	cred.TargetAlias = "MyAlias"
+	cred.UserName = "Nobody"
+	cred.Persist = PersistLocalMachine
+	return
+}
+
 func TestUtf16PtrToString(t *testing.T) {
 	input := "Foo Bar"
 	utf16Ptr, err := syscall.UTF16PtrFromString(input)
@@ -20,6 +31,15 @@ func TestUtf16PtrToString(t *testing.T) {
 func TestUtf16PtrToString_Nil(t *testing.T) {
 	output := utf16PtrToString(nil)
 	assert.Equal(t, "", output)
+}
+
+func BenchmarkUtf16PtrToString(b *testing.B) {
+	input := "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam" +
+		"nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"
+	utf16Ptr, _ := syscall.UTF16PtrFromString(input)
+	for i := 0; i < b.N; i++ {
+		utf16PtrToString(utf16Ptr)
+	}
 }
 
 func TestUtf16ToByte(t *testing.T) {
@@ -44,10 +64,16 @@ func TestUtf16ToByte_Empty(t *testing.T) {
 	assert.Equal(t, 0, len(output))
 }
 
+func BenchmarkUtf16ToByte(b *testing.B) {
+	input := []uint16{1, 2, 3, 4, 258}
+	for i := 0; i < b.N; i++ {
+		utf16ToByte(input)
+	}
+}
+
 func TestGoBytes(t *testing.T) {
 	input := []byte{1, 2, 3, 4, 5}
-	inputPtr := unsafe.Pointer(&input[0])
-	output := goBytes(inputPtr, uint32(len(input)))
+	output := goBytes(uintptr(unsafe.Pointer(&input[0])), uint32(len(input)))
 	assert.Equal(t, len(input), len(output))
 	assert.Equal(t, input[0], output[0])
 	assert.Equal(t, input[1], output[1])
@@ -60,20 +86,20 @@ func TestGoBytes(t *testing.T) {
 
 func TestGoBytes_Null(t *testing.T) {
 	assert.NotPanics(t, func() {
-		output := goBytes(nullPointer, 123)
+		output := goBytes(0, 123)
 		assert.Equal(t, []byte{}, output)
 	})
 }
 
+func BenchmarkGoBytes(b *testing.B) {
+	input := []byte{1, 2, 3, 4, 5}
+	for i := 0; i < b.N; i++ {
+		goBytes(uintptr(unsafe.Pointer(&input[0])), uint32(len(input)))
+	}
+}
+
 func TestConversion(t *testing.T) {
-	now := time.Now()
-	cred := new(Credential)
-	cred.TargetName = "Foo"
-	cred.Comment = "Bar"
-	cred.LastWritten = now
-	cred.TargetAlias = "MyAlias"
-	cred.UserName = "Nobody"
-	cred.Persist = PersistLocalMachine
+	cred := fixtureCredential()
 	native := nativeFromCredential(cred)
 	res := nativeToCredential(native)
 	assert.NotEqual(t, uintptr(0), native.TargetName)
@@ -86,9 +112,9 @@ func TestConversion(t *testing.T) {
 	assert.NotEqual(t, cred.TargetName, res.TargetName)
 }
 
-func TestConversion_Null(t *testing.T) {
+func TestConversion_Nil(t *testing.T) {
 	assert.NotPanics(t, func() {
-		res := nativeToCredential((*nativeCREDENTIAL)(unsafe.Pointer(uintptr(0))))
+		res := nativeToCredential(nil)
 		assert.Nil(t, res)
 	})
 	assert.NotPanics(t, func() {
@@ -158,4 +184,19 @@ func TestConversion_Attributes_Nil(t *testing.T) {
 	assert.Equal(t, uintptr(0), native.Attributes)
 	assert.Equal(t, uint32(0), native.AttributeCount)
 	assert.Equal(t, []CredentialAttribute{}, res.Attributes)
+}
+
+func BenchmarkConversionFrom(b *testing.B) {
+	cred := fixtureCredential()
+	for i := 0; i < b.N; i++ {
+		nativeFromCredential(cred)
+	}
+}
+
+func BenchmarkConversionTo(b *testing.B) {
+	cred := fixtureCredential()
+	n := nativeFromCredential(cred)
+	for i := 0; i < b.N; i++ {
+		nativeToCredential(n)
+	}
 }

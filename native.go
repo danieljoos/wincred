@@ -1,6 +1,7 @@
 package wincred
 
 import (
+	"reflect"
 	"syscall"
 	"unsafe"
 )
@@ -60,7 +61,7 @@ const (
 
 // http://msdn.microsoft.com/en-us/library/windows/desktop/aa374804(v=vs.85).aspx
 func nativeCredRead(targetName string, typ nativeCRED_TYPE) (*Credential, error) {
-	var pcred uintptr
+	var pcred *nativeCREDENTIAL
 	targetNamePtr, _ := syscall.UTF16PtrFromString(targetName)
 	ret, _, err := procCredRead.Call(
 		uintptr(unsafe.Pointer(targetNamePtr)),
@@ -71,9 +72,9 @@ func nativeCredRead(targetName string, typ nativeCRED_TYPE) (*Credential, error)
 	if ret == 0 {
 		return nil, err
 	}
-	defer procCredFree.Call(pcred)
+	defer procCredFree.Call(uintptr(unsafe.Pointer(pcred)))
 
-	return nativeToCredential((*nativeCREDENTIAL)(unsafe.Pointer(pcred))), nil
+	return nativeToCredential(pcred), nil
 }
 
 // http://msdn.microsoft.com/en-us/library/windows/desktop/aa375187(v=vs.85).aspx
@@ -127,10 +128,14 @@ func nativeCredEnumerate(filter string, all bool) ([]*Credential, error) {
 		return nil, err
 	}
 	defer procCredFree.Call(pcreds)
-	pcredsSlice := (*[1 << 30]uintptr)(unsafe.Pointer(pcreds))[:count:count]
-	creds := make([]*Credential, count)
-	for i := range creds {
-		creds[i] = nativeToCredential((*nativeCREDENTIAL)(unsafe.Pointer(pcredsSlice[i])))
+	credsSlice := *(*[]*nativeCREDENTIAL)(unsafe.Pointer(&reflect.SliceHeader{
+		Data: pcreds,
+		Len:  count,
+		Cap:  count,
+	}))
+	creds := make([]*Credential, count, count)
+	for i, cred := range credsSlice {
+		creds[i] = nativeToCredential(cred)
 	}
 
 	return creds, nil

@@ -74,9 +74,16 @@ func TestNativeCredRead_Mock(t *testing.T) {
 		})
 	mockCredRead.Setup(&procCredRead)
 	defer mockCredRead.TearDown()
-	// Mock `CredFree`: Must be called as well
+	// Mock `CredFree`: Must be called as well with the correct pointer
 	mockCredFree := new(mockProc)
-	mockCredFree.On("Call", mock.AnythingOfType("[]uintptr")).Return(0, 0, nil)
+	mockCredFree.
+		On("Call", mock.AnythingOfType("[]uintptr")).
+		Return(0, 0, nil).
+		Run(func(args mock.Arguments) {
+			arg := args.Get(0).([]uintptr)
+			assert.Equal(t, 1, len(arg))
+			assert.Equal(t, uintptr(unsafe.Pointer(credNative)), arg[0])
+		})
 	mockCredFree.Setup(&procCredFree)
 	defer mockCredFree.TearDown()
 
@@ -186,6 +193,7 @@ func TestNativeCredEnumerate_Mock(t *testing.T) {
 		nativeFromCredential(creds[0]),
 		nativeFromCredential(creds[1]),
 	}
+
 	// Mock `CreadEnumerate`: returns success and sets the pointer to the prepared nativeCreds array
 	mockCredEnumerate := new(mockProc)
 	mockCredEnumerate.
@@ -199,9 +207,16 @@ func TestNativeCredEnumerate_Mock(t *testing.T) {
 		})
 	mockCredEnumerate.Setup(&procCredEnumerate)
 	defer mockCredEnumerate.TearDown()
-	// Mock `CredFree`: Must be called as well
+	// Mock `CredFree`: Must be called as well with the correct pointer
 	mockCredFree := new(mockProc)
-	mockCredFree.On("Call", mock.AnythingOfType("[]uintptr")).Return(0, 0, nil)
+	mockCredFree.
+		On("Call", mock.AnythingOfType("[]uintptr")).
+		Return(0, 0, nil).
+		Run(func(args mock.Arguments) {
+			arg := args.Get(0).([]uintptr)
+			assert.Equal(t, 1, len(arg))
+			assert.Equal(t, uintptr(unsafe.Pointer(&credsNative[0])), arg[0])
+		})
 	mockCredFree.Setup(&procCredFree)
 	defer mockCredFree.TearDown()
 
