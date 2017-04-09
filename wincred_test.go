@@ -1,6 +1,7 @@
 package wincred
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -85,4 +86,33 @@ func TestGenericCredential_DeleteNotFound(t *testing.T) {
 	// ERROR_NOT_FOUND (1168):
 	// MSDN: https://msdn.microsoft.com/en-us/library/windows/desktop/ms681383(v=vs.85).aspx
 	assert.Equal(t, "Element not found.", err.Error())
+}
+
+func ExampleList() {
+	if creds, err := List(); err == nil {
+		for _, cred := range creds {
+			fmt.Println(cred.TargetName)
+		}
+	}
+}
+
+func ExampleGetGenericCredential() {
+	if cred, err := GetGenericCredential("myGoApplication"); err == nil {
+		fmt.Println(cred.TargetName, string(cred.CredentialBlob))
+	}
+}
+
+func ExampleGenericCredential_Delete() {
+	cred, _ := GetGenericCredential("myGoApplication")
+	if err := cred.Delete(); err == nil {
+		fmt.Println("Deleted")
+	}
+}
+
+func ExampleGenericCredential_Write() {
+	cred := NewGenericCredential("myGoApplication")
+	cred.CredentialBlob = []byte("my secret")
+	if err := cred.Write(); err == nil {
+		fmt.Println("Created")
+	}
 }
