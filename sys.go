@@ -24,7 +24,7 @@ type proc interface {
 }
 
 // http://msdn.microsoft.com/en-us/library/windows/desktop/aa374788(v=vs.85).aspx
-type nativeCREDENTIAL struct {
+type sysCREDENTIAL struct {
 	Flags              uint32
 	Type               uint32
 	TargetName         *uint16
@@ -40,7 +40,7 @@ type nativeCREDENTIAL struct {
 }
 
 // http://msdn.microsoft.com/en-us/library/windows/desktop/aa374790(v=vs.85).aspx
-type nativeCREDENTIAL_ATTRIBUTE struct {
+type sysCREDENTIAL_ATTRIBUTE struct {
 	Keyword   *uint16
 	Flags     uint32
 	ValueSize uint32
@@ -48,22 +48,22 @@ type nativeCREDENTIAL_ATTRIBUTE struct {
 }
 
 // http://msdn.microsoft.com/en-us/library/windows/desktop/aa374788(v=vs.85).aspx
-type nativeCRED_TYPE uint32
+type sysCRED_TYPE uint32
 
 const (
-	naCRED_TYPE_GENERIC                 nativeCRED_TYPE = 0x1
-	naCRED_TYPE_DOMAIN_PASSWORD         nativeCRED_TYPE = 0x2
-	naCRED_TYPE_DOMAIN_CERTIFICATE      nativeCRED_TYPE = 0x3
-	naCRED_TYPE_DOMAIN_VISIBLE_PASSWORD nativeCRED_TYPE = 0x4
-	naCRED_TYPE_GENERIC_CERTIFICATE     nativeCRED_TYPE = 0x5
-	naCRED_TYPE_DOMAIN_EXTENDED         nativeCRED_TYPE = 0x6
+	sysCRED_TYPE_GENERIC                 sysCRED_TYPE = 0x1
+	sysCRED_TYPE_DOMAIN_PASSWORD         sysCRED_TYPE = 0x2
+	sysCRED_TYPE_DOMAIN_CERTIFICATE      sysCRED_TYPE = 0x3
+	sysCRED_TYPE_DOMAIN_VISIBLE_PASSWORD sysCRED_TYPE = 0x4
+	sysCRED_TYPE_GENERIC_CERTIFICATE     sysCRED_TYPE = 0x5
+	sysCRED_TYPE_DOMAIN_EXTENDED         sysCRED_TYPE = 0x6
 
-	naERROR_NOT_FOUND = "Element not found."
+	sysERROR_NOT_FOUND = "Element not found."
 )
 
 // http://msdn.microsoft.com/en-us/library/windows/desktop/aa374804(v=vs.85).aspx
-func nativeCredRead(targetName string, typ nativeCRED_TYPE) (*Credential, error) {
-	var pcred *nativeCREDENTIAL
+func sysCredRead(targetName string, typ sysCRED_TYPE) (*Credential, error) {
+	var pcred *sysCREDENTIAL
 	targetNamePtr, _ := syscall.UTF16PtrFromString(targetName)
 	ret, _, err := procCredRead.Call(
 		uintptr(unsafe.Pointer(targetNamePtr)),
@@ -76,12 +76,12 @@ func nativeCredRead(targetName string, typ nativeCRED_TYPE) (*Credential, error)
 	}
 	defer procCredFree.Call(uintptr(unsafe.Pointer(pcred)))
 
-	return nativeToCredential(pcred), nil
+	return sysToCredential(pcred), nil
 }
 
 // http://msdn.microsoft.com/en-us/library/windows/desktop/aa375187(v=vs.85).aspx
-func nativeCredWrite(cred *Credential, typ nativeCRED_TYPE) error {
-	ncred := nativeFromCredential(cred)
+func sysCredWrite(cred *Credential, typ sysCRED_TYPE) error {
+	ncred := sysFromCredential(cred)
 	ncred.Type = uint32(typ)
 	ret, _, err := procCredWrite.Call(
 		uintptr(unsafe.Pointer(ncred)),
@@ -95,7 +95,7 @@ func nativeCredWrite(cred *Credential, typ nativeCRED_TYPE) error {
 }
 
 // http://msdn.microsoft.com/en-us/library/windows/desktop/aa374787(v=vs.85).aspx
-func nativeCredDelete(cred *Credential, typ nativeCRED_TYPE) error {
+func sysCredDelete(cred *Credential, typ sysCRED_TYPE) error {
 	targetNamePtr, _ := syscall.UTF16PtrFromString(cred.TargetName)
 	ret, _, err := procCredDelete.Call(
 		uintptr(unsafe.Pointer(targetNamePtr)),
@@ -110,7 +110,7 @@ func nativeCredDelete(cred *Credential, typ nativeCRED_TYPE) error {
 }
 
 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa374794(v=vs.85).aspx
-func nativeCredEnumerate(filter string, all bool) ([]*Credential, error) {
+func sysCredEnumerate(filter string, all bool) ([]*Credential, error) {
 	var count int
 	var pcreds uintptr
 	var filterPtr uintptr
@@ -130,14 +130,14 @@ func nativeCredEnumerate(filter string, all bool) ([]*Credential, error) {
 		return nil, err
 	}
 	defer procCredFree.Call(pcreds)
-	credsSlice := *(*[]*nativeCREDENTIAL)(unsafe.Pointer(&reflect.SliceHeader{
+	credsSlice := *(*[]*sysCREDENTIAL)(unsafe.Pointer(&reflect.SliceHeader{
 		Data: pcreds,
 		Len:  count,
 		Cap:  count,
 	}))
 	creds := make([]*Credential, count, count)
 	for i, cred := range credsSlice {
-		creds[i] = nativeToCredential(cred)
+		creds[i] = sysToCredential(cred)
 	}
 
 	return creds, nil

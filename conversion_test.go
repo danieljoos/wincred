@@ -102,9 +102,9 @@ func BenchmarkGoBytes(b *testing.B) {
 
 func TestConversion(t *testing.T) {
 	cred := fixtureCredential()
-	native := nativeFromCredential(cred)
-	res := nativeToCredential(native)
-	assert.NotEqual(t, uintptr(0), native.TargetName)
+	sys := sysFromCredential(cred)
+	res := sysToCredential(sys)
+	assert.NotEqual(t, uintptr(0), sys.TargetName)
 	assert.Equal(t, cred.TargetName, res.TargetName)
 	assert.Equal(t, cred.Comment, res.Comment)
 	assert.Equal(t, cred.LastWritten, res.LastWritten)
@@ -116,11 +116,11 @@ func TestConversion(t *testing.T) {
 
 func TestConversion_Nil(t *testing.T) {
 	assert.NotPanics(t, func() {
-		res := nativeToCredential(nil)
+		res := sysToCredential(nil)
 		assert.Nil(t, res)
 	})
 	assert.NotPanics(t, func() {
-		res := nativeFromCredential(nil)
+		res := sysFromCredential(nil)
 		assert.Nil(t, res)
 	})
 }
@@ -128,30 +128,30 @@ func TestConversion_Nil(t *testing.T) {
 func TestConversion_CredentialBlob(t *testing.T) {
 	cred := new(Credential)
 	cred.CredentialBlob = []byte{1, 2, 3}
-	native := nativeFromCredential(cred)
-	res := nativeToCredential(native)
-	assert.Equal(t, uint32(3), native.CredentialBlobSize)
-	assert.NotEqual(t, uintptr(0), native.CredentialBlob)
+	sys := sysFromCredential(cred)
+	res := sysToCredential(sys)
+	assert.Equal(t, uint32(3), sys.CredentialBlobSize)
+	assert.NotEqual(t, uintptr(0), sys.CredentialBlob)
 	assert.Equal(t, cred.CredentialBlob, res.CredentialBlob)
 }
 
 func TestConversion_CredentialBlob_Empty(t *testing.T) {
 	cred := new(Credential)
 	cred.CredentialBlob = []byte{} // empty blob
-	native := nativeFromCredential(cred)
-	res := nativeToCredential(native)
-	assert.Equal(t, uintptr(0), native.CredentialBlob)
-	assert.Equal(t, uint32(0), native.CredentialBlobSize)
+	sys := sysFromCredential(cred)
+	res := sysToCredential(sys)
+	assert.Equal(t, uintptr(0), sys.CredentialBlob)
+	assert.Equal(t, uint32(0), sys.CredentialBlobSize)
 	assert.Equal(t, []byte{}, res.CredentialBlob)
 }
 
 func TestConversion_CredentialBlob_Nil(t *testing.T) {
 	cred := new(Credential)
 	cred.CredentialBlob = nil // nil blob
-	native := nativeFromCredential(cred)
-	res := nativeToCredential(native)
-	assert.Equal(t, uintptr(0), native.CredentialBlob)
-	assert.Equal(t, uint32(0), native.CredentialBlobSize)
+	sys := sysFromCredential(cred)
+	res := sysToCredential(sys)
+	assert.Equal(t, uintptr(0), sys.CredentialBlob)
+	assert.Equal(t, uint32(0), sys.CredentialBlobSize)
 	assert.Equal(t, []byte{}, res.CredentialBlob)
 }
 
@@ -161,44 +161,44 @@ func TestConversion_Attributes(t *testing.T) {
 		{Keyword: "Foo", Value: []byte{1, 2, 3}},
 		{Keyword: "Bar", Value: []byte{}},
 	}
-	native := nativeFromCredential(cred)
-	res := nativeToCredential(native)
-	assert.NotEqual(t, uintptr(0), native.Attributes)
-	assert.Equal(t, uint32(2), native.AttributeCount)
+	sys := sysFromCredential(cred)
+	res := sysToCredential(sys)
+	assert.NotEqual(t, uintptr(0), sys.Attributes)
+	assert.Equal(t, uint32(2), sys.AttributeCount)
 	assert.Equal(t, cred.Attributes, res.Attributes)
 }
 
 func TestConversion_Attributes_Empty(t *testing.T) {
 	cred := new(Credential)
 	cred.Attributes = []CredentialAttribute{}
-	native := nativeFromCredential(cred)
-	res := nativeToCredential(native)
-	assert.Equal(t, uintptr(0), native.Attributes)
-	assert.Equal(t, uint32(0), native.AttributeCount)
+	sys := sysFromCredential(cred)
+	res := sysToCredential(sys)
+	assert.Equal(t, uintptr(0), sys.Attributes)
+	assert.Equal(t, uint32(0), sys.AttributeCount)
 	assert.Equal(t, []CredentialAttribute{}, res.Attributes)
 }
 
 func TestConversion_Attributes_Nil(t *testing.T) {
 	cred := new(Credential)
 	cred.Attributes = nil
-	native := nativeFromCredential(cred)
-	res := nativeToCredential(native)
-	assert.Equal(t, uintptr(0), native.Attributes)
-	assert.Equal(t, uint32(0), native.AttributeCount)
+	sys := sysFromCredential(cred)
+	res := sysToCredential(sys)
+	assert.Equal(t, uintptr(0), sys.Attributes)
+	assert.Equal(t, uint32(0), sys.AttributeCount)
 	assert.Equal(t, []CredentialAttribute{}, res.Attributes)
 }
 
 func BenchmarkConversionFrom(b *testing.B) {
 	cred := fixtureCredential()
 	for i := 0; i < b.N; i++ {
-		nativeFromCredential(cred)
+		sysFromCredential(cred)
 	}
 }
 
 func BenchmarkConversionTo(b *testing.B) {
 	cred := fixtureCredential()
-	n := nativeFromCredential(cred)
+	n := sysFromCredential(cred)
 	for i := 0; i < b.N; i++ {
-		nativeToCredential(n)
+		sysToCredential(n)
 	}
 }

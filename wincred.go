@@ -14,7 +14,7 @@ import (
 // GetGenericCredential fetches the generic credential with the given name from Windows credential manager.
 // It returns nil and an error if the credential could not be found or an error occurred.
 func GetGenericCredential(targetName string) (*GenericCredential, error) {
-	cred, err := nativeCredRead(targetName, naCRED_TYPE_GENERIC)
+	cred, err := sysCredRead(targetName, sysCRED_TYPE_GENERIC)
 	if cred != nil {
 		return &GenericCredential{*cred}, err
 	}
@@ -33,20 +33,20 @@ func NewGenericCredential(targetName string) (result *GenericCredential) {
 
 // Write persists the generic credential object to Windows credential manager.
 func (t *GenericCredential) Write() (err error) {
-	err = nativeCredWrite(&t.Credential, naCRED_TYPE_GENERIC)
+	err = sysCredWrite(&t.Credential, sysCRED_TYPE_GENERIC)
 	return
 }
 
 // Delete removes the credential object from Windows credential manager.
 func (t *GenericCredential) Delete() (err error) {
-	err = nativeCredDelete(&t.Credential, naCRED_TYPE_GENERIC)
+	err = sysCredDelete(&t.Credential, sysCRED_TYPE_GENERIC)
 	return
 }
 
 // GetDomainPassword fetches the domain-password credential with the given target host name from Windows credential manager.
 // It returns nil and an error if the credential could not be found or an error occurred.
 func GetDomainPassword(targetName string) (*DomainPassword, error) {
-	cred, err := nativeCredRead(targetName, naCRED_TYPE_DOMAIN_PASSWORD)
+	cred, err := sysCredRead(targetName, sysCRED_TYPE_DOMAIN_PASSWORD)
 	if cred != nil {
 		return &DomainPassword{*cred}, err
 	}
@@ -65,13 +65,13 @@ func NewDomainPassword(targetName string) (result *DomainPassword) {
 
 // Write persists the domain-password credential to Windows credential manager.
 func (t *DomainPassword) Write() (err error) {
-	err = nativeCredWrite(&t.Credential, naCRED_TYPE_DOMAIN_PASSWORD)
+	err = sysCredWrite(&t.Credential, sysCRED_TYPE_DOMAIN_PASSWORD)
 	return
 }
 
 // Delete removes the domain-password credential from Windows credential manager.
 func (t *DomainPassword) Delete() (err error) {
-	err = nativeCredDelete(&t.Credential, naCRED_TYPE_DOMAIN_PASSWORD)
+	err = sysCredDelete(&t.Credential, sysCRED_TYPE_DOMAIN_PASSWORD)
 	return
 }
 
@@ -82,8 +82,8 @@ func (t *DomainPassword) SetPassword(pw string) {
 
 // List retrieves all credentials of the Credentials store.
 func List() ([]*Credential, error) {
-	creds, err := nativeCredEnumerate("", true)
-	if err != nil && err.Error() == naERROR_NOT_FOUND {
+	creds, err := sysCredEnumerate("", true)
+	if err != nil && err.Error() == sysERROR_NOT_FOUND {
 		// Ignore ERROR_NOT_FOUND and return an empty list instead
 		creds = []*Credential{}
 		err = nil
