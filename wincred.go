@@ -1,15 +1,9 @@
-// +build windows
-
 // Package wincred provides primitives for accessing the Windows Credentials Management API.
 // This includes functions for retrieval, listing and storage of credentials as well as Go structures for convenient access to the credential data.
 //
 // A more detailed description of Windows Credentials Management can be found on
 // MSDN: https://msdn.microsoft.com/en-us/library/windows/desktop/aa374789(v=vs.85).aspx
 package wincred
-
-import (
-	"syscall"
-)
 
 // GetGenericCredential fetches the generic credential with the given name from Windows credential manager.
 // It returns nil and an error if the credential could not be found or an error occurred.
@@ -77,7 +71,7 @@ func (t *DomainPassword) Delete() (err error) {
 
 // SetPassword sets the CredentialBlob field of a domain password credential to the given string.
 func (t *DomainPassword) SetPassword(pw string) {
-	t.CredentialBlob = utf16ToByte(syscall.StringToUTF16(pw))
+	t.CredentialBlob = utf16ToByte(utf16FromString(pw))
 }
 
 // List retrieves all credentials of the Credentials store.

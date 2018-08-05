@@ -39,6 +39,11 @@ func utf16ToByte(wstr []uint16) (result []byte) {
 	return
 }
 
+// utf16FromString creates a UTF16 char array from a string.
+func utf16FromString(str string) []uint16 {
+	return syscall.StringToUTF16(str)
+}
+
 // goBytes copies the given C byte array to a Go byte array (see `C.GoBytes`).
 // This function avoids having cgo as dependency.
 func goBytes(src uintptr, len uint32) []byte {
