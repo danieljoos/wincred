@@ -107,7 +107,7 @@ func TestConversion(t *testing.T) {
 	assert.NotEqual(t, uintptr(0), sys.TargetName)
 	assert.Equal(t, cred.TargetName, res.TargetName)
 	assert.Equal(t, cred.Comment, res.Comment)
-	assert.Equal(t, cred.LastWritten, res.LastWritten)
+	assert.True(t, cred.LastWritten.Equal(res.LastWritten))
 	assert.Equal(t, cred.TargetAlias, res.TargetAlias)
 	assert.Equal(t, cred.UserName, res.UserName)
 	cred.TargetName = "Another Foo"
