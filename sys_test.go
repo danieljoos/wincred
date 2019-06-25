@@ -32,7 +32,7 @@ func (t *mockProc) Call(a ...uintptr) (r1, r2 uintptr, lastErr error) {
 	return uintptr(args.Int(0)), uintptr(args.Int(1)), args.Error(2)
 }
 
-func TestsysCredRead_MockFailure(t *testing.T) {
+func TestSysCredRead_MockFailure(t *testing.T) {
 	// The test error
 	testError := errors.New("test error")
 	// Mock `CreadRead`: returns failure state and the error
