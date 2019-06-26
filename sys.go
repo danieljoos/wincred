@@ -113,15 +113,12 @@ func sysCredDelete(cred *Credential, typ sysCRED_TYPE) error {
 func sysCredEnumerate(filter string, all bool) ([]*Credential, error) {
 	var count int
 	var pcreds uintptr
-	var filterPtr uintptr
+	var filterPtr *uint16
 	if !all {
-		filterUtf16Ptr, _ := syscall.UTF16PtrFromString(filter)
-		filterPtr = uintptr(unsafe.Pointer(filterUtf16Ptr))
-	} else {
-		filterPtr = 0
+		filterPtr, _ = syscall.UTF16PtrFromString(filter)
 	}
 	ret, _, err := procCredEnumerate.Call(
-		filterPtr,
+		uintptr(unsafe.Pointer(filterPtr)),
 		0,
 		uintptr(unsafe.Pointer(&count)),
 		uintptr(unsafe.Pointer(&pcreds)),
