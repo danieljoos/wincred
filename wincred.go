@@ -84,3 +84,15 @@ func List() ([]*Credential, error) {
 	}
 	return creds, err
 }
+
+// FilteredList retrieves the list of credentials from the Credentials store that match the given filter.
+// The filter string defines the prefix followed by an asterisk for the `TargetName` attribute of the credentials.
+func FilteredList(filter string) ([]*Credential, error) {
+	creds, err := sysCredEnumerate(filter, false)
+	if err != nil && err.Error() == sysERROR_NOT_FOUND {
+		// Ignore ERROR_NOT_FOUND and return an empty list instead
+		creds = []*Credential{}
+		err = nil
+	}
+	return creds, err
+}

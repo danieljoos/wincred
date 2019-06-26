@@ -11,6 +11,7 @@ import (
 const (
 	testTargetName        = "github.com/danieljoos/wincred/testing"
 	testTargetNameMissing = "github.com/danieljoos/wincred/missing"
+	testListFilter        = "github.com/danieljoos*"
 )
 
 func TestGenericCredential_EndToEnd(t *testing.T) {
@@ -38,11 +39,22 @@ func TestGenericCredential_EndToEnd(t *testing.T) {
 	}
 	assert.True(t, found)
 
-	// 4. Delete it
+	// 4. Search it also in a filtered list
+	creds, err = FilteredList(testListFilter)
+	assert.Nil(t, err)
+	assert.NotNil(t, creds)
+	assert.NotEqual(t, 0, len(creds))
+	found = false
+	for i := range creds {
+		found = found || creds[i].TargetName == testTargetName
+	}
+	assert.True(t, found)
+
+	// 5. Delete it
 	err = cred.Delete()
 	assert.Nil(t, err)
 
-	// 5. Search it again in the list. It should be gone.
+	// 6. Search it again in the complete list. It should be gone.
 	creds, err = List()
 	assert.Nil(t, err)
 	assert.NotNil(t, creds)
