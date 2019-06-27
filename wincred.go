@@ -2,7 +2,7 @@
 // This includes functions for retrieval, listing and storage of credentials as well as Go structures for convenient access to the credential data.
 //
 // A more detailed description of Windows Credentials Management can be found on
-// MSDN: https://msdn.microsoft.com/en-us/library/windows/desktop/aa374789(v=vs.85).aspx
+// Docs: https://docs.microsoft.com/en-us/windows/desktop/SecAuthN/credentials-management
 package wincred
 
 // GetGenericCredential fetches the generic credential with the given name from Windows credential manager.

@@ -70,7 +70,7 @@ func TestGetGenericCredential_NotFound(t *testing.T) {
 	assert.Nil(t, cred)
 	assert.NotNil(t, err)
 	// ERROR_NOT_FOUND (1168):
-	// MSDN: https://msdn.microsoft.com/en-us/library/windows/desktop/ms681383(v=vs.85).aspx
+	// Docs: https://docs.microsoft.com/en-us/windows/desktop/Debug/system-error-codes--1000-1299-
 	assert.Equal(t, "Element not found.", err.Error())
 }
 
@@ -79,7 +79,7 @@ func TestGetGenericCredential_Empty(t *testing.T) {
 	assert.Nil(t, cred)
 	assert.NotNil(t, err)
 	// ERROR_INVALID_PARAMETER (87):
-	// MSDN: https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382(v=vs.85).aspx
+	// Docs: https://docs.microsoft.com/en-us/windows/desktop/Debug/system-error-codes--0-499-
 	assert.Equal(t, "The parameter is incorrect.", err.Error())
 }
 
@@ -88,7 +88,7 @@ func TestGenericCredential_WriteEmpty(t *testing.T) {
 	err := cred.Write()
 	assert.NotNil(t, err)
 	// ERROR_INVALID_PARAMETER (87):
-	// MSDN: https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382(v=vs.85).aspx.
+	// Docs: https://docs.microsoft.com/en-us/windows/desktop/Debug/system-error-codes--0-499-
 	assert.Equal(t, "The parameter is incorrect.", err.Error())
 }
 
@@ -97,6 +97,6 @@ func TestGenericCredential_DeleteNotFound(t *testing.T) {
 	err := cred.Delete()
 	assert.NotNil(t, err)
 	// ERROR_NOT_FOUND (1168):
-	// MSDN: https://msdn.microsoft.com/en-us/library/windows/desktop/ms681383(v=vs.85).aspx
+	// Docs: https://docs.microsoft.com/en-us/windows/desktop/Debug/system-error-codes--1000-1299-
 	assert.Equal(t, "Element not found.", err.Error())
 }
