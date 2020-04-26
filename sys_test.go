@@ -64,6 +64,8 @@ func TestSysCredRead_Mock(t *testing.T) {
 	cred.Comment = "Bar"
 	cred.CredentialBlob = []byte{1, 2, 3}
 	credSys := sysFromCredential(cred)
+	t.Log(credSys) // Workaround to keep the object alive
+
 	// Mock `CreadRead`: returns success and sets the pointer to the prepared sysCred struct
 	mockCredRead := new(mockProc)
 	mockCredRead.
@@ -72,10 +74,11 @@ func TestSysCredRead_Mock(t *testing.T) {
 		Run(func(args mock.Arguments) {
 			arg := args.Get(0).([]uintptr)
 			assert.Equal(t, 4, len(arg))
-			*(*uintptr)(unsafe.Pointer(arg[3])) = uintptr(unsafe.Pointer(credSys))
+			*(**sysCREDENTIAL)(unsafe.Pointer(arg[3])) = credSys
 		})
 	mockCredRead.Setup(&procCredRead)
 	defer mockCredRead.TearDown()
+
 	// Mock `CredFree`: Must be called as well with the correct pointer
 	mockCredFree := new(mockProc)
 	mockCredFree.
@@ -195,6 +198,8 @@ func TestSysCredEnumerate_Mock(t *testing.T) {
 		sysFromCredential(creds[0]),
 		sysFromCredential(creds[1]),
 	}
+	t.Log(credsSys[0]) // Workaround to keep the object alive
+	t.Log(credsSys[1]) // Workaround to keep the object alive
 
 	// Mock `CreadEnumerate`: returns success and sets the pointer to the prepared sysCreds array
 	mockCredEnumerate := new(mockProc)
@@ -205,10 +210,11 @@ func TestSysCredEnumerate_Mock(t *testing.T) {
 			arg := args.Get(0).([]uintptr)
 			assert.Equal(t, 4, len(arg))
 			*(*int)(unsafe.Pointer(arg[2])) = len(credsSys)
-			*(*uintptr)(unsafe.Pointer(arg[3])) = uintptr(unsafe.Pointer(&credsSys[0]))
+			*(*[]*sysCREDENTIAL)(unsafe.Pointer(arg[3])) = credsSys
 		})
 	mockCredEnumerate.Setup(&procCredEnumerate)
 	defer mockCredEnumerate.TearDown()
+
 	// Mock `CredFree`: Must be called as well with the correct pointer
 	mockCredFree := new(mockProc)
 	mockCredFree.
