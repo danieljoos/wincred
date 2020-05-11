@@ -47,19 +47,13 @@ type sysCREDENTIAL_ATTRIBUTE struct {
 	Value     uintptr
 }
 
-// https://docs.microsoft.com/en-us/windows/desktop/api/wincred/ns-wincred-_credentialw
-type sysCRED_TYPE uint32
-
-const (
-	sysCRED_TYPE_GENERIC                 sysCRED_TYPE = 0x1
-	sysCRED_TYPE_DOMAIN_PASSWORD         sysCRED_TYPE = 0x2
-	sysCRED_TYPE_DOMAIN_CERTIFICATE      sysCRED_TYPE = 0x3
-	sysCRED_TYPE_DOMAIN_VISIBLE_PASSWORD sysCRED_TYPE = 0x4
-	sysCRED_TYPE_GENERIC_CERTIFICATE     sysCRED_TYPE = 0x5
-	sysCRED_TYPE_DOMAIN_EXTENDED         sysCRED_TYPE = 0x6
-
-	sysERROR_NOT_FOUND = "Element not found."
-)
+func convertErr(err error) error {
+	sysErr, ok := err.(syscall.Errno)
+	if ok {
+		return Err(sysErr)
+	}
+	return err
+}
 
 // https://docs.microsoft.com/en-us/windows/desktop/api/wincred/nf-wincred-credreadw
 func sysCredRead(targetName string, typ sysCRED_TYPE) (*Credential, error) {
@@ -72,7 +66,7 @@ func sysCredRead(targetName string, typ sysCRED_TYPE) (*Credential, error) {
 		uintptr(unsafe.Pointer(&pcred)),
 	)
 	if ret == 0 {
-		return nil, err
+		return nil, convertErr(err)
 	}
 	defer procCredFree.Call(uintptr(unsafe.Pointer(pcred)))
 
@@ -88,7 +82,7 @@ func sysCredWrite(cred *Credential, typ sysCRED_TYPE) error {
 		0,
 	)
 	if ret == 0 {
-		return err
+		return convertErr(err)
 	}
 
 	return nil
@@ -103,7 +97,7 @@ func sysCredDelete(cred *Credential, typ sysCRED_TYPE) error {
 		0,
 	)
 	if ret == 0 {
-		return err
+		return convertErr(err)
 	}
 
 	return nil
@@ -124,7 +118,7 @@ func sysCredEnumerate(filter string, all bool) ([]*Credential, error) {
 		uintptr(unsafe.Pointer(&pcreds)),
 	)
 	if ret == 0 {
-		return nil, err
+		return nil, convertErr(err)
 	}
 	defer procCredFree.Call(pcreds)
 	credsSlice := *(*[]*sysCREDENTIAL)(unsafe.Pointer(&reflect.SliceHeader{

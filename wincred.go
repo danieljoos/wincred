@@ -5,6 +5,40 @@
 // Docs: https://docs.microsoft.com/en-us/windows/desktop/SecAuthN/credentials-management
 package wincred
 
+import "fmt"
+
+// https://docs.microsoft.com/en-us/windows/desktop/api/wincred/ns-wincred-_credentialw
+type sysCRED_TYPE uint32
+
+const (
+	sysCRED_TYPE_GENERIC                 sysCRED_TYPE = 0x1
+	sysCRED_TYPE_DOMAIN_PASSWORD         sysCRED_TYPE = 0x2
+	sysCRED_TYPE_DOMAIN_CERTIFICATE      sysCRED_TYPE = 0x3
+	sysCRED_TYPE_DOMAIN_VISIBLE_PASSWORD sysCRED_TYPE = 0x4
+	sysCRED_TYPE_GENERIC_CERTIFICATE     sysCRED_TYPE = 0x5
+	sysCRED_TYPE_DOMAIN_EXTENDED         sysCRED_TYPE = 0x6
+)
+
+// Err from syscall.Errno
+type Err uint
+
+func (e Err) Error() string {
+	switch e {
+	case ErrNotFound:
+		return "Element not found."
+	case ErrParameterIncorrect:
+		return "The parameter is incorrect."
+	default:
+		return fmt.Sprintf("Error (%d)", e)
+	}
+}
+
+// ErrNotFound if not found.
+const ErrNotFound = Err(1168)
+
+// ErrParameterIncorrect if parameter is incorrect.
+const ErrParameterIncorrect = Err(87)
+
 // GetGenericCredential fetches the generic credential with the given name from Windows credential manager.
 // It returns nil and an error if the credential could not be found or an error occurred.
 func GetGenericCredential(targetName string) (*GenericCredential, error) {
@@ -77,7 +111,7 @@ func (t *DomainPassword) SetPassword(pw string) {
 // List retrieves all credentials of the Credentials store.
 func List() ([]*Credential, error) {
 	creds, err := sysCredEnumerate("", true)
-	if err != nil && err.Error() == sysERROR_NOT_FOUND {
+	if err != nil && err == ErrNotFound {
 		// Ignore ERROR_NOT_FOUND and return an empty list instead
 		creds = []*Credential{}
 		err = nil
@@ -89,7 +123,7 @@ func List() ([]*Credential, error) {
 // The filter string defines the prefix followed by an asterisk for the `TargetName` attribute of the credentials.
 func FilteredList(filter string) ([]*Credential, error) {
 	creds, err := sysCredEnumerate(filter, false)
-	if err != nil && err.Error() == sysERROR_NOT_FOUND {
+	if err != nil && err == ErrNotFound {
 		// Ignore ERROR_NOT_FOUND and return an empty list instead
 		creds = []*Credential{}
 		err = nil
