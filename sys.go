@@ -58,7 +58,9 @@ const (
 	sysCRED_TYPE_GENERIC_CERTIFICATE     sysCRED_TYPE = 0x5
 	sysCRED_TYPE_DOMAIN_EXTENDED         sysCRED_TYPE = 0x6
 
-	sysERROR_NOT_FOUND = "Element not found."
+	// https://docs.microsoft.com/en-us/windows/desktop/Debug/system-error-codes
+	sysERROR_NOT_FOUND         = syscall.Errno(1168)
+	sysERROR_INVALID_PARAMETER = syscall.Errno(87)
 )
 
 // https://docs.microsoft.com/en-us/windows/desktop/api/wincred/nf-wincred-credreadw

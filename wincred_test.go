@@ -3,6 +3,7 @@
 package wincred
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -69,34 +70,26 @@ func TestGetGenericCredential_NotFound(t *testing.T) {
 	cred, err := GetGenericCredential(testTargetNameMissing)
 	assert.Nil(t, cred)
 	assert.NotNil(t, err)
-	// ERROR_NOT_FOUND (1168):
-	// Docs: https://docs.microsoft.com/en-us/windows/desktop/Debug/system-error-codes--1000-1299-
-	assert.Equal(t, "Element not found.", err.Error())
+	assert.True(t, errors.Is(err, ErrElementNotFound))
 }
 
 func TestGetGenericCredential_Empty(t *testing.T) {
 	cred, err := GetGenericCredential("")
 	assert.Nil(t, cred)
 	assert.NotNil(t, err)
-	// ERROR_INVALID_PARAMETER (87):
-	// Docs: https://docs.microsoft.com/en-us/windows/desktop/Debug/system-error-codes--0-499-
-	assert.Equal(t, "The parameter is incorrect.", err.Error())
+	assert.True(t, errors.Is(err, ErrInvalidParameter))
 }
 
 func TestGenericCredential_WriteEmpty(t *testing.T) {
 	cred := NewGenericCredential("")
 	err := cred.Write()
 	assert.NotNil(t, err)
-	// ERROR_INVALID_PARAMETER (87):
-	// Docs: https://docs.microsoft.com/en-us/windows/desktop/Debug/system-error-codes--0-499-
-	assert.Equal(t, "The parameter is incorrect.", err.Error())
+	assert.True(t, errors.Is(err, ErrInvalidParameter))
 }
 
 func TestGenericCredential_DeleteNotFound(t *testing.T) {
 	cred := NewGenericCredential(testTargetNameMissing)
 	err := cred.Delete()
 	assert.NotNil(t, err)
-	// ERROR_NOT_FOUND (1168):
-	// Docs: https://docs.microsoft.com/en-us/windows/desktop/Debug/system-error-codes--1000-1299-
-	assert.Equal(t, "Element not found.", err.Error())
+	assert.True(t, errors.Is(err, ErrElementNotFound))
 }
