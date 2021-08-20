@@ -3,7 +3,6 @@
 package wincred
 
 import (
-	"syscall"
 	"testing"
 	"time"
 	"unsafe"
@@ -20,28 +19,6 @@ func fixtureCredential() (cred *Credential) {
 	cred.UserName = "Nobody"
 	cred.Persist = PersistLocalMachine
 	return
-}
-
-func TestUtf16PtrToString(t *testing.T) {
-	input := "Foo Bar"
-	utf16Ptr, err := syscall.UTF16PtrFromString(input)
-	output := utf16PtrToString(utf16Ptr)
-	assert.Nil(t, err)
-	assert.Equal(t, input, output)
-}
-
-func TestUtf16PtrToString_Nil(t *testing.T) {
-	output := utf16PtrToString(nil)
-	assert.Equal(t, "", output)
-}
-
-func BenchmarkUtf16PtrToString(b *testing.B) {
-	input := "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam" +
-		"nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"
-	utf16Ptr, _ := syscall.UTF16PtrFromString(input)
-	for i := 0; i < b.N; i++ {
-		utf16PtrToString(utf16Ptr)
-	}
 }
 
 func TestUtf16ToByte(t *testing.T) {
