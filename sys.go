@@ -65,7 +65,7 @@ const (
 
 // https://docs.microsoft.com/en-us/windows/desktop/api/wincred/nf-wincred-credreadw
 func sysCredRead(targetName string, typ sysCRED_TYPE) (*Credential, error) {
-	var pcred *sysCREDENTIAL
+	pcred := &sysCREDENTIAL{}
 	targetNamePtr, _ := syscall.UTF16PtrFromString(targetName)
 	ret, _, err := procCredRead.Call(
 		uintptr(unsafe.Pointer(targetNamePtr)),
