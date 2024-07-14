@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 jobs:
   update:
@@ -17,7 +18,7 @@ jobs:
       -
         name: Call pkg.go.dev
         run: |
-          go get github.com/${GITHUB_REPOSITORY}@${GITHUB_REF#refs/tags/}
+          go mod download github.com/${GITHUB_REPOSITORY}@${GITHUB_REF#refs/tags/}
         env:
           GO111MODULE: on
           GOPROXY: https://proxy.golang.org
